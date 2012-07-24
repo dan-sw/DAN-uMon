@@ -1,0 +1,11 @@
+# Copy this script to the directory level above umon then run it to
+# create a tarball of all the public umon stuff.
+#
+tar -cvf umon_public.tar umon/umon_apps umon/umon_main \
+umon/umon_ports/csb226 umon/umon_ports/csb250 umon/umon_ports/csb272 \
+umon/umon_ports/csb281 umon/umon_ports/csb335 umon/umon_ports/csb337 \
+umon/umon_ports/csb350 umon/umon_ports/csb360 umon/umon_ports/csb431 \
+umon/umon_ports/csb472 umon/umon_ports/csb637 umon/umon_ports/csb655 \
+umon/umon_ports/evalsh2 umon/umon_ports/fads860 umon/umon_ports/template \
+umon/umon_ports/walnut
+gzip umon_public.tar

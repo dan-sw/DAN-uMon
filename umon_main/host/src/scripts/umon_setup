@@ -1,0 +1,77 @@
+#!/bin/bash
+#
+# umon_setup:
+# This script is a startup script used by bash shell environments.
+# The purpose is to establish a basic environment for working on a
+# micromonitor port.  The intent is that this script be called by a
+# bashrc file that does some target-specific setup prior to this
+# script starting up.  An example bashrc follows:
+# 
+##### Begin example bashrc:
+#
+#    PS1=WALNUT_EVAL:
+#	 export EDITOR=vi
+#    export TITLE="IBM WALNUT EvalBoard Monitor Development"
+#    export UMONTOP=D:/els/umon
+#    . $UMONTOP/tools/bin/umon_profile
+#
+##### End example bashrc
+#
+# Hard assumptions (you gotta have these):
+#
+# * Shell variables:
+#	-UMONTOP: Full path of umon top-level-directory (i.e. D:/els/umon)
+#
+# * The common cygwin paths have been set in the system environment.
+#   When bash starts up, it automatically converts C: pathing to
+#   /cygdrive/c syntax.
+#
+# Soft assumptions (not required, but handy):
+# * Shell variables:
+#	-TITLE: Set to some string that will be put on the window's label bar
+#			(used by the 'title' tool below).
+# 
+
+if [ "$UMONTOP" = "" ] 
+then
+	while [ "$UMONTOP" = "" ]
+	do
+		printf "Enter full path of uMON top-level-directory: "
+		read tmp
+		if [ "$tmp" != "" ]
+		then
+			export UMONTOP=$tmp
+		fi
+	done
+fi
+
+BIN=$UMONTOP/host/bin
+
+export MAKE_MODE=UNIX
+
+alias lf='ls -Cp'
+alias r='fc -e -'
+
+# If a user wants to add some customization to the startup, then
+# define a script/executable with the EXT_UMON_SETUP shell variable...
+if [ "$EXT_UMON_SETUP" != "" ]
+then
+	. $EXT_UMON_SETUP
+fi
+
+if [ "$UMONTOP" != "" ]
+then
+	if [ -f $BIN/title.exe ] || [ -f $BIN/title ]
+	then
+		$BIN/title 
+	fi
+	export tools=$UMONTOP/host
+	export target=$UMONTOP/target
+	export cpu=$target/cpu
+	export zlib=$target/zlib
+	export com=$target/common
+	export misc=$target/misc
+	export make=$target/make
+	export flash=$target/flash
+	export dev=$target/dev
+fi

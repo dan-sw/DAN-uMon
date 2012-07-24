@@ -1,0 +1,27 @@
+#!/bin/bash
+# 
+# tcat:
+# Target 'cat'...
+# 
+usage()
+{
+	echo "Usage: tcat {filename} [target ip address]"
+	echo "(uses \$TARGET_IP if set)"
+}
+
+if [ $# == 1 ]
+then
+	if [ "$TARGET_IP" = "" ] 
+	then
+		usage
+		exit 1
+	fi
+elif [ $# != 2 ]
+then
+	usage
+	exit 1
+else
+	export TARGET_IP=$2
+fi
+
+moncmd $TARGET_IP "tfs cat $1"

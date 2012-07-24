@@ -1,0 +1,13 @@
+jffs2 qry $ARG1
+if $JFFS2TOT eq 1 goto GOT_ONE
+if $JFFS2TOT eq 0 goto GOT_NONE
+echo More than one file with that string!
+exit
+
+# GOT_ONE:
+echo OK, got it!
+exit
+
+# GOT_NONE:
+echo Can't find the file.
+exit

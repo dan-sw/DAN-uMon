@@ -1,0 +1,15 @@
+network,e				scripts/network
+monrc,e					scripts/monrc
+linux,e					scripts/linux
+run,e					scripts/run
+runs,e					scripts/runs
+ver,e					scripts/ver
+upgrade,e				scripts/upgrade
+jffs,e					scripts/jffs
+params_init,e			scripts/params_init
+status,e				scripts/status
+structfile				scripts/structfile
+msim,e					scripts/msim
+msim_init,e             scripts/msim_init
+pc,e                    scripts/pc
+dasim,e					scripts/dasim

@@ -1,0 +1,246 @@
+##########################################################################
+# File name: status
+# Show all nodes statuses: running stages, asserts, exceptions.
+##########################################################################
+
+set SYNC_ARRAY_ADDR			0xC04FFFE0			# Nodes startup synchronization array address (SYNC_ARRAY_TX)
+set SYNC_ARRAY_STEP					 1			# Size of one structure in SYNC_ARRAY_ADDR
+
+set STATUS_ARRAY_ADDR		0xC04FFFC0			# Nodes status array (PLATFORM_ARRAY_TX)
+set STATUS_ARRAY_STEP				 1			# Size of one structure in PLATFORM_ARRAY_TX
+
+set EXCEPT_REASON_ADDR		0xC04F4000			# EXCEPTION_REASON buffer for all nodes
+set EXCEPT_REASON_STEP				16			# Size of one structure in EXCEPTION_REASON
+
+set ASSERT_REASON_ADDR		0xC04F3000			# ASSERT_REASON buffer for all nodes
+set ASSERT_REASON_STEP			   128			# Size of one structure in ASSERT_REASON
+
+set STAT_ARRAY_ADDR			0xD055F400			# Nodes status array address (STAT_ARRAY_TX)
+set STAT_ARRAY_STEP					 4			# Size of one structure in STAT_ARRAY_ADDR
+
+set STAGENAMES 				IDLE\x20\x20\x20\x20\x20\x20	PRE_INIT\x20\x20	INIT\x20\x20\x20\x20\x20\x20	POST_INIT\x20	CUST\x20\x20\x20\x20\x20\x20	PRE_START\x20	START\x20\x20\x20\x20\x20	POST_START	POST_RUN\x20\x20
+
+# All Nodes ID/Name pairs (corresponds to PLATFORM_core_e enum)
+set NODE_0	NPU_ARM0
+set NODE_1	NPU_ARM1
+set NODE_2	NPU_ARM2
+set NODE_3	NPU_ARM3
+set NODE_4	RES_4
+set NODE_5	RES_5
+set NODE_6	RES_6
+set NODE_7	RES_7
+set NODE_8	NPU_CPU0
+set NODE_9	NPU_CPU1
+set NODE_10	NPU_CPU2
+set NODE_11	NPU_CPU3
+set NODE_12	NPU_CPU4
+set NODE_13	NPU_CPU5
+set NODE_14	RES_14
+set NODE_15	RES_15
+set NODE_16	TX_CPU0\x20
+set NODE_17	TX_CPU1\x20
+set NODE_18	TX_CPU2\x20
+set NODE_19	TX_CPU3\x20
+set NODE_20	TX_DSP0\x20
+set NODE_21	TX_DSP1\x20
+set NODE_22	RES_22
+set NODE_23	RES_23
+set NODE_24	RX_CPU0\x20
+set NODE_25	RX_CPU1\x20
+set NODE_26	RES_26
+set NODE_27	RES_27
+set NODE_28	RX_DSP0\x20
+set NODE_29	RX_DSP1\x20
+set NODE_30	RX_DSP2\x20
+set NODE_31	RX_DSP3\x20
+
+set ForEachNode_Routine 	PrintNodeStage
+set ForEachNode_Base		$SYNC_ARRAY_ADDR
+set ForEachNode_Step		$SYNC_ARRAY_STEP
+gosub ForEachNode
+
+set ForEachNode_Routine 	PrintNodeStatus
+set ForEachNode_Base		$STATUS_ARRAY_ADDR
+set ForEachNode_Step		$STATUS_ARRAY_STEP
+gosub ForEachNode
+
+set ForEachNode_Routine 	PrintNodeExept
+set ForEachNode_Base		$EXCEPT_REASON_ADDR
+set ForEachNode_Step		$EXCEPT_REASON_STEP
+gosub ForEachNode
+
+echo  "--------------------------------------------------------------------------"
+echo  "|  Node  |  Stage   | Status |   ExcCause    |     EPC     |   ExcVaddr  |"
+echo  "--------------------------------------------------------------------------"
+set idx 0
+# LOOP:
+set ForEachNode_Node $NODE_$idx
+if $ForEachNode_Node seq \$NODE_$idx goto end
+if RES sin $ForEachNode_Node goto skip_prn
+echo " "$NODE_${idx}_INFO
+# skip_prn:
+set -i idx
+goto LOOP
+# end:
+echo  "--------------------------------------------------------------------------"
+
+
+set ForEachNode_Routine 	PrintNodeAssert
+set ForEachNode_Base		$ASSERT_REASON_ADDR
+set ForEachNode_Step		$ASSERT_REASON_STEP
+gosub ForEachNode
+
+if $ARG1 sne all  goto arg_end
+echo
+echo IPC node stages debug statistic.
+echo To detect module's name use KERNEL_LINK/DRIVER_LINK/MODULE_LINK lists 
+echo from modules.mk file of the correspondent node (start counting from 1).
+echo The state and counters in the table mean the last succeeded state or module.
+echo  "-------------------------------------------"
+echo  "|  Node  |   Stage   |Driver|Kernel|Module|"
+echo  "-------------------------------------------"
+set ForEachNode_Routine 	PrintNodeStat
+set ForEachNode_Base		$STAT_ARRAY_ADDR
+set ForEachNode_Step		$STAT_ARRAY_STEP
+gosub ForEachNode
+echo  "-------------------------------------------"
+# arg_end:
+
+exit
+
+########################################################
+# ForEachNode:
+# Call ForEachNode_Routine for each node from NODE_NAMES list
+# Parameters:
+#	- ForEachNode_Routine - subroutine to call
+#	- ForEachNode_Base	  - base address (1st node data structure)
+#	- ForEachNode_Step	  - address step between node's structures
+# The ForEachNode_Routine will take 3 arguments:
+#	- ForEachNode_idx  - Node index
+#	- ForEachNode_Node - Node name
+#	- ForEachNode_Base - Node structure address
+set ForEachNode_idx 0
+# NODES_LOOP:
+set ForEachNode_Node $NODE_$ForEachNode_idx
+if $ForEachNode_Node seq \$NODE_$ForEachNode_idx return
+if RES sin $ForEachNode_Node goto skip_routine
+gosub $ForEachNode_Routine
+# skip_routine:
+set -i ForEachNode_idx
+set -i -x ForEachNode_Base $ForEachNode_Step
+goto NODES_LOOP
+
+
+########################################################
+# PrintNodeStage:
+# Parameters:
+#	- ForEachNode_Node - Node name
+#	- ForEachNode_Base - Node structure address
+dm -v stageid $ForEachNode_Base 1
+set -i stageid
+# PLATFROM_e_startup_stage enum
+item $stageid 	stagename	$STAGENAMES
+if $stagename sne \$stagename goto echo_node
+set stagename ***\x20\x20\x20\x20\x20\x20\x20
+# echo_node:
+#echo " " $ForEachNode_Node \t $stagename
+set NODE_${ForEachNode_idx}_INFO $ForEachNode_Node\x20\x20$stagename
+return
+
+
+########################################################
+# PrintNodeStatus:
+# Parameters:
+#	- ForEachNode_Node - Node name
+#	- ForEachNode_Base - Node structure address
+dm -v statid $ForEachNode_Base 1
+set NODE_${ForEachNode_idx}_STAT $statid
+return
+
+
+########################################################
+# PrintNodeExept:
+# Parameters:
+#	- ForEachNode_Node - Node name
+#	- ForEachNode_Base - Node structure address
+set baseaddr $ForEachNode_Base
+dm -4 -v exccause $baseaddr 1
+set -i -x baseaddr 4
+dm -4 -v epc1 $baseaddr 1
+set -i -x baseaddr 4
+dm -4 -v excvaddr $baseaddr 1
+set -i -x baseaddr 4
+#echo exccause = $exccause, epc1 = $epc1, excvaddr = $excvaddr
+if ${NODE_${ForEachNode_idx}_STAT} ne 0 goto set_e
+set NODE_${ForEachNode_idx}_STAT I
+goto end_set_a_e1
+# set_e:
+set NODE_${ForEachNode_idx}_STAT E
+if $exccause ne 0xFFFFFFFF goto end_set_a_e2
+set NODE_${ForEachNode_idx}_STAT A
+# end_set_a_e1:
+set exccause \x20--------\x20
+set epc1 	 $exccause
+set excvaddr $exccause
+# end_set_a_e2:
+set NODE_${ForEachNode_idx}_INFO ${NODE_${ForEachNode_idx}_INFO}\t${NODE_${ForEachNode_idx}_STAT}\t$exccause\t$epc1\t$excvaddr
+return
+
+
+########################################################
+# disabled_PrintNodeAssert:
+# Parameters:
+#	- ForEachNode_Node - Node name
+#	- ForEachNode_Base - Node structure address
+echo $NODE_${ForEachNode_idx}:
+set baseaddr $ForEachNode_Base
+dm -s $baseaddr 60
+set -i -x baseaddr 60
+dm -s $baseaddr 60
+set -i -x baseaddr 60
+dm -4 -v assert_line $baseaddr 4
+set -i -x baseaddr 4
+dm -4 -v assert_cause $baseaddr 4
+echo Line $assert_line, Cause $cause
+echo -------------------------------
+return
+
+
+########################################################
+# PrintNodeAssert:
+# Parameters:
+#	- ForEachNode_Node - Node name
+#	- ForEachNode_Base - Node structure address
+if ${NODE_${ForEachNode_idx}_STAT} seq A goto cont
+return # last bit != 1, no assert
+# cont:
+set STRUCTFILE structfile
+echo $NODE_${ForEachNode_idx}:
+cast ASSERT $ForEachNode_Base
+echo -------------------------------
+return
+
+
+########################################################
+# PrintNodeStat:
+# Parameters:
+#	- ForEachNode_Node - Node name
+#	- ForEachNode_Base - Node structure address
+set baseaddr $ForEachNode_Base
+dm -v idriver $baseaddr 1
+set -i -x baseaddr 1
+dm -v ikernel $baseaddr 1
+set -i -x baseaddr 1
+dm -v imodule $baseaddr 1
+set -i -x baseaddr 1
+dm -v stageid $baseaddr 1
+set -i stageid
+set -i idriver 0	# make it decimal
+set -i ikernel 0
+set -i imodule 0
+item $stageid stagename	$STAGENAMES
+if $stagename sne \$stagename goto echo_node2
+set stagename ***\x20\x20\x20\x20\x20\x20\x20
+# echo_node2:
+echo "$ForEachNode_Node   $stagename   $idriver    $ikernel    $imodule"
+return

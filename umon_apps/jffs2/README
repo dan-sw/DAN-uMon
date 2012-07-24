@@ -1,0 +1,12 @@
+This directory contains source and makefile to build  the
+'jffs2' command as a standalone application for a uMon-based
+target.  It depends on being in the context of a complete uMon source
+tree, so this directory is not stand-alone.
+
+The jffs2_le.bin and jffs2_be.bin files can be put into TFS on the target
+and used by the jffs2 command as a dummy jffs2 flash area just for
+demonstration.  Also, the jffs2_script is an example of how jffs2 would
+be used in a real system to query for the presence of a file.
+
+Refer to makefile for details on how to build for various CPU architectures
+and target configurations.

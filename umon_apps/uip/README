@@ -1,0 +1,27 @@
+This directory contains source and makefile to build a small
+uMon-resident application that runs the uIP stack from Adam Dunkels.
+The basic uMon hookup code is the same as the demo directory under
+umon_apps/demo; however, instead of being a generic demo, this focusses
+on uIP demos.
+
+The uip code was downloaded from the uIP homepage 
+(http://www.sics.se/~adam/uip/index.php/Main_Page) on Apr 8, 2008.
+
+As of this writing, the makefile supports convenient build for
+the hello-world, telnetd and webserver applications as they come
+with uIP.  The file main.c has all the hooks that allow uIP to work
+essentially out-of-the-box when running as a uMon application.
+
+Run 'make APP=HELLO' to build the hello-world demo.
+Run 'make APP=HETTPD' to build the webserver demo.
+Run 'make APP=TELNETD' to build the telnetd demo.
+
+As of this writing, this has been tested only on the PPC architecture.
+To run on other CPUs, the clock_time() function in main.c needs to
+be created.  If you use this for some other processor and create the
+cpu-specific timer function, please consider contributing it back to the
+uMon distribution.
+
+Refer to makefile for details on how to build for various CPU architectures
+and target configurations.  That is essentially identical to the umon_apps
+demo application.

@@ -1,0 +1,8 @@
+# maketags:
+# This script assumes that we're using exuberant ctags
+# (http://ctags.sourceforge.net/), and that a file (cscope.files)
+# containing a list of source files  has been created.
+# With that, this script will create a 'tags' file for use by
+# editors that support tags (i.e. vim/vi).
+#
+ctags --file-tags=yes -n -L cscope.files

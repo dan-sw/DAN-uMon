@@ -1,0 +1,7 @@
+export PS1=GENERIC:
+export TITLE="Generic uMon Platform"
+if [ "$UMONTOP" == "" ]
+then
+	export UMONTOP=../../umon_main
+fi
+. $UMONTOP/host/bin/umon_setup

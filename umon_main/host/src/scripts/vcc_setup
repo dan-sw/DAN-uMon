@@ -1,0 +1,28 @@
+########################################################################
+#
+# vcc_setup:
+# This script can be run to set up the environment needed to build
+# the MicroMonitor host-based tools using cygwin make and Visual C++ 
+# compiler toolsuite (6.0). 
+#
+# Modify these three lines to match your environment...
+#
+export MSV_DISK=C
+export BIN=/cygdrive/c/bin
+export SYS32=/cygdrive/c/winnt/system32
+
+########################################################################
+#
+# Lines below this point should not have to be changed.
+#
+export CYGWIN_MSV="/cygdrive/$MSV_DISK/Program Files/Microsoft Visual Studio"
+export MSV="$MSV_DISK:\Program Files\Microsoft Visual Studio"
+export VSCommonDir="$MSV\COMMON"
+export MSDevDir="$VSCommonDir\msdev98"
+export MSVCDir="$MSV\VC98"
+export LIB="$MSVCDir\LIB;$MSVCDir\MFC\LIB;$LIB"
+
+export PATH="$CYGWIN_MSV/common/msdev98/bin:$CYGWIN_MSV/vc98/bin:$CYGWIN_MSV/common/tools/win95:$CYGWIN_MSV/common/tools:/cygdrive/c/windows/system:$PATH"
+
+export INCLUDE="$MSVCDir\ATL\INCLUDE;$MSVCDir\INCLUDE;$MSVCDir\MFC\INCLUDE;$INCLUDE"
+

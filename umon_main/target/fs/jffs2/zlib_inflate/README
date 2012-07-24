@@ -1,0 +1,6 @@
+The files in this directory come from the publically available ZLIB package.
+
+The names have been changed ("jz_" prefix) to avoid naming conflicts
+with a second version of zlib  used in uMon.
+
+Refer to the top of jz_zlib.h for licensing/copyright information.

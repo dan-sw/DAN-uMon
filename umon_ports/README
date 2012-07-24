@@ -1,0 +1,60 @@
+Each directory at the level represents one "port" of micromonitor.
+It consists of the code that is specific to a particular system.
+Following is a breakdown of each port, and the CPU architecture that
+is used in it...
+
+ARM:
+	ads_imx21	(IMX21)
+	csb335		(LH79520 ARM720T)
+	csb337		(AT91RM9200 ARM920T)
+	csb431		(ML67Q500x ARM7TDMI)
+	csb437tl	(AT91RM9200 ARM920T)
+	csb535fs	(MC9328MX21 ARM926EJS)
+	csb536fs	(MC9328MXL ARM920T)
+	csb637		(AT91RM9200 ARM920T)
+
+Xscale:
+	csb226		(PXA250)
+	csb625		(PXA255)
+
+MIPS:
+	csb250		(Au1500)
+	csb350		(Au1100)
+	csb650		(Au1100)
+	csb655		(AU1550)
+
+PowerPC:
+	csb272		(PPC_405GP)
+	csb281		(PPC_MPC8245)
+	csb472		(PPC_405GP)
+	fads860		(PPC_860)
+	mpc852t		(PPC_852T)
+	v4			(PPC_405 embedded in Xilinx Virtex-4)
+	v4alt		(PPC_405 embedded in Xilinx Virtex-4, different io)
+	walnut		(PPC_405GP)
+	template
+
+Hitachi SH2:
+	evalsh2		(SH2 7043)
+
+Renesas SH3:
+	mpr2		(SH3 7720)
+
+MicroBlaze:
+	as3dev		(MicroBlaze)
+
+NIOS:
+	altep2c35	(Nios)
+
+Coldfire:
+	csb360		(MCF-5272) 
+	csb760		(MCF-5329, not tested as of Sep 2008)
+	mcf5235		(MCF-5235)
+	mcf5329		(MCF-5329)
+
+68K:
+	m68en302	(M68EN302)
+
+bf537:
+	blackfin	(BF537)
+

@@ -1,0 +1,25 @@
+#
+# tfscrc_check:
+# This script can be used to create a uMon script that will
+# verify that a file in TFS has the same CRC as a file on 
+# the host.
+# It assumes that the filename on the host is the same as the name in TFS.
+
+if [ "$#" != "1" ]
+then
+	echo "Usage: $0 {filename}"
+	exit 1
+fi
+export FILENAME=$1
+
+echo "tfs base $FILENAME FBASE" 
+echo "tfs size $FILENAME FSIZE"
+export FCRC=`fcrc $FILENAME |  gawk '{printf "%s",$5}'`
+
+echo "mt -C \$FBASE \$FSIZE"
+echo "if \$MTCRC ne $FCRC goto ERROR"
+echo "exit"
+
+echo "# ERROR:"
+echo "echo \"File crc check for $FILENAME failed.\""
+echo "exit"

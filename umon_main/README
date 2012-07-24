@@ -1,0 +1,187 @@
+#########################################################################
+#
+#  MICROMONITOR README:
+#
+This is the top-level of the main MicroMonitor (umon) source tree.
+This source tree, along with a target-specific port directory,
+makes up a complete umon build.
+
+#########################################################################
+#
+#  HOW IS THE SOURCE TREE ORGANIZED?
+#
+The two top-level directories of this main module are "target" and "host"...
+
+The "host" directory contains source code to build the host-based tools
+that come with MicroMonitor.  These tools must be built prior to building
+a target port.  To build these tools, read the "Dos2Unix" note below, then
+change directory to "host" and follow the instructions in that README file.
+
+The "target" directory contains the main umon source tree.  This is the
+target-resident code that is used by all umon ports, the port-specific
+code is a separate diretory under umon_ports.
+
+Dos2Unix note:
+Depending on how you received this tree, it may be necessary to run a
+"dos-to-unix" utility on the source files to eliminate those pesky "^M"s
+at the end of every line in the file.  There is a script called umon_d2u
+under umon_main/host/src/scripts directory that can be run to do this
+automatically; however, note that it too may have the DOS format end-of-lines
+so you may need to clean it up first.  To be safe, do the following:
+
+   1. Clean out old objects...
+      Under umon_main/host run "make clean"
+
+   2. Build the "d2u" tool...
+      Under umon_main/host/src/utils run "make d2u" on Linux or
+	  "make d2u.exe" on Windows, then place that d2u (or d2u.exe)
+	  executable in your PATH.
+
+   3. Change directory to the top umon level (one level above
+      umon_main) and run the following commands:
+
+        d2u umon_main/host/src/scripts/umon_d2u
+        chmod +x umon_main/host/src/scripts/umon_d2u
+        umon_main/host/src/scripts/umon_d2u
+
+The umon_d2u script will then walk through all files under a typical
+uMon source installation and clean up (eliminate the DOS format end-of-line)
+the files.   By the way, this seems to be an issue introduced by CVS
+when files are pulled from a UNIX CVS server using a Windows CVS client.
+If anyone out there knows how to make CVS not insert the DOSish EOL when
+doing this, please let me know!!!
+
+
+#########################################################################
+#
+#  WHAT IS THE DEVELOPMENT ENVIRONMENT?
+#
+All of the scripts, tools and makefiles assume a Unix-like GNU environment
+and a bash shell.  If the host OS isn't some flavor of UNIX, then for a PC
+running Windows, this usually means Cygwin.
+
+All MicroMonitor ports are built with the Microcross cross-compilation
+package called "X-Tools" (refer to www.microcross.com for more information).
+The makefiles are tuned to these tools; however, since they are GNU, only
+minor changes in the make files should allow any GNU-based cross-compilation
+environment to run.
+
+#########################################################################
+#
+#  HOW DO I BUILD A NEW PORT?
+#
+Look through the list of available ports and find one that most
+closely matches your port.  Start with that, or if nothing is even
+close, use the template directory as a starting point.  Even if there
+is a port that is close to what you need, it is useful to refer to the
+template directory files because they show the basic set of functions
+that need to be filled in.  Also, refer to porting instructions in the
+uMon user's manual downloadable from the Microcross website
+(www.microcross.com/html/micromonitor.html).
+
+#########################################################################
+#
+#  HOW DO I REBUILD AN ALREADY CREATED PORT?
+#
+For the sake of this discussion, we'll assume you've got the csb337
+port, the port of umon to the Cogent Single Board 337 (www.cogcomp.com).
+
+Follow these steps:
+1. Build the host-based tools (see instructions in umon_main/host/README).
+
+2. Change directory (cd) to the directory the port-specific code was
+   installed to (anywhere on your machine, say C:/els/umon_ports/csb337).
+
+3. Start off by establishing the environment with the bashrc file.
+   First edit the file and set the UMONTOP shell variable to the
+   path of the umon_main directory (path can be full or relative).
+   Then close and save that file and issue the command:
+
+   . bashrc
+
+   Yes, you type "DOT SPACE bashrc".  Putting the "DOT SPACE" before
+   running the bashrc script will make all environment variables created
+   by that script accessible to the calling shell.
+
+4. Depending on where you got (or who built) your GNU cross-compilation
+   tools, they will have some common prefix for each of the generic tools.
+   In other words, instead of "gcc", your toolset might be arm-elf-gcc 
+   (where "arm-elf" is the common prefix) or powerpc-405-elf-gcc or
+   mips-rtems-gcc or something like that.  These makefiles are tuned to
+   the Microcross style prefix, using CPUTYPE-FILETYPE as the prefix.  As
+   a result, if you are using the Microcross tools, you can probably skip
+   this step.  If you are using tools that have a different prefix style,
+   then edit the makefile in the port-specific directory and just above
+   the line that pulls in common.make add a line to initialize the variable
+   TOOL_PREFIX to your prefix.  For example...
+
+   TOOL_PREFIX = mips-rtems  <<<--- This is the line you add, but use 
+                                --- the prefix for your toolset.
+
+   include $(TOPDIR)/target/make/common.make  <<<--- Right above this line.
+
+   This will override the default prefix defined in common.make and
+   allow your tools to be called out by the makefile.
+   
+5. Type 'make help' to get information about port specific variables (if any)
+   that need to be established prior to starting the make. If the
+   makefile requires any additional variable definitions on the command
+   line, output here will indicate this.  
+
+6. Once the variables of the step above (if any) are established (either
+   on the command line or in your environment) run...
+
+         make [VAR-INIT] rebuild
+
+         where VAR-INIT is any variable initialization
+         spelled out by "make help" (may be nothing).
+
+   to rebuild the bootrom and ramtst images for that target.  Note that
+   it is likely that "VAR-INIT" is nothing so your command line will
+   just be "make rebuild".
+   Once the build completes, the final files will be under a directory
+   named "build_PLATFORM" where "PLATFORM" is the value of the PLATFORM
+   variable defined in the makefile.  There are many other make rules
+   for building various port-specific files.  Run "make help" to get a
+   listing of those other rules.
+
+
+7. The final step (assuming you have a target that is already running
+   MicroMonitor) is to install the new version.  This is also done with
+   a make rule...
+
+   make TARGET_IP=A.B.C.D dld
+
+   This 'dld' rule will install a file called 'ramtst' on the target.
+   This is a version of the monitor that will run from TFS, out of RAM.
+   This is a suggested, but not required prefix to the 'newmon' rule which
+   will actually overwrite the boot sector with a new boot image...
+
+   make TARGET_IP=A.B.C.D newmon
+
+   This pumps the new image down to the target using TFTP, then tells the
+   monitor to erase the old image and install the new one.  Be very
+   careful here because there is a window of time during which the bootrom
+   is erased and re-written; hence, if you arbitrarily reset the board
+   while newmon is in progress, you may destroy your bootrom image and 
+   then you need a JTAG device (or something similar) to recover the board.
+
+#########################################################################
+#
+#  WHAT ABOUT MICROMONITOR VERSION NUMBERING?
+#
+Until December 2004, MicroMonitor was distributed as a single, port-specific
+tar-ball and the only information about a version was the build date.
+Moving forward, the MicroMonitor source will have at least a 3-field
+version number, i.e. X.Y.Z.  The least significant field (in this case,
+'Z') will represent the release of the port and all other fields represent
+the release of the common source code.  For a given port then, the
+target-specific version number 'Z' is appended to the core-specific
+version number 'X.Y' to form the three-field number 'X.Y.Z'.  This allows
+the port code to be changed and reflected in the version number without
+affecting the core version number and visa versa...  The core code
+can be updated (incrementing X or Y) without affecting the port version
+number.  In the common source code, target/core/version.h contains the X.Y
+field and under the target-specific code, the file target_version.h holds
+the 'Z' value.
+

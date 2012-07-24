@@ -1,0 +1,74 @@
+; Start-Up Script for ARM926, DAN Board
+
+;  SYnch.Connect LOCALHOST:20003
+  ON ERROR NOTHING
+
+; start-up debugger
+  SYStem.CPU ARM926ej
+  SYStem.JtagClock RTCK
+
+  SYStem.MC.IRPRE 0
+  SYStem.MC.DRPRE 0
+  SYStem.MC.IRPOST 0xC
+  SYStem.MC.DRPOST 3
+  sYmbol.CASE OFF
+
+  SYStem.option.IMASKASM ON
+  SYStem.option.IMASKHLL ON
+  SYStem.option.TURBO OFF
+  SYStem.option.BigEndian OFF
+  SYStem.option.ResBreak OFF
+  SYStem.option.INTDIS ON
+  SYStem.option.DBGACK ON
+  SYStem.option.ShowError ON
+  SYStem.option.EnReset OFF
+  SYStem.option.WaitReset OFF
+  SYStem.option.TRST OFF
+  SYStem.option.TIDBGEN OFF
+  SYStem.option.DACR OFF
+  SYStem.option.CFLUSH ON
+  SYStem.option.AMBA OFF
+  SYStem.option.NODATA OFF
+  SYStem.option.EXEC OFF
+  SYStem.option.SPLIT OFF
+  SYStem.option.PC 0x60400000
+  SYStem.option.DisMode ARM
+  
+  SYStem.MemAccess Denied
+  SYStem.CpuAccess Denied
+
+  break.sel.PROGRAM ONCHIP
+  
+  SYStem.Up
+
+; Disable Break-in-Break-out
+  D.S SD:0x65732600 %LE %LONG 0xffff0000
+  D.S SD:0x65732604 %LE %LONG 0xffff0000
+
+  Register.Set CPSR 0x600000d3
+
+; open some windows
+  WinCLEAR
+  WinPOS 0% 0% 100% 50%
+  Data.List
+  WinPOS 0% 50% 50% 50%
+  Var.Frame /Locals /Caller
+  WinPOS 50% 50% 50% 50%
+  register.view
+
+;  GO 0x00000000
+;  WAIT !run()
+
+; load uMon loader program
+;  Data.LOAD.ELF  umon_ports/dan3X00/arm3400/Bin_arm/umon_piggy.elf /GNU /CYGDRIVE
+; load uMon symbols
+  Data.LOAD.ELF  umon_ports/dan3X00/arm3400/Bin_arm/umon.elf /GNU /CYGDRIVE /NOCODE /NOCLEAR
+
+; disable MMU
+;  Data.Set c15:1 %Long 0x00050078
+; Set Alignment Fault, and Instruction cache ON
+;  PER.S C15:0x1 %LONG 0x0005307A
+
+;  GO
+  
+  ENDDO

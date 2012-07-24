@@ -1,0 +1,22 @@
+##########################################################################
+# File name: erbank
+# Erase Flash bank 0 or 1 or 2 or 3
+# ARG1: Bank # 0..3
+##########################################################################
+
+spif_device 	$ARG1
+
+set isec 		0
+set iaddr_dst	0
+
+echo Erasing flash Bank $ARG1 \c
+# LOOP0:
+if $isec ge 256 goto LOOP0_DONE
+spif berase $iaddr_dst $FLASH_SECSIZE_K
+set -i isec
+set -i -x iaddr_dst $FLASH_SECSIZE
+echo .\c
+goto LOOP0
+# LOOP0_DONE:
+
+echo Finished

@@ -1,0 +1,19 @@
+These files are environment setup examples that come with the 
+MicroMonitor distribution.  Copy these to $UMONTOP/host/bin and
+make the appropriate modifications.
+
+bashrc_port:
+	This is template bashrc file that would be used with a new
+	port of MicroMonitor.  If you already have a port, then the
+	bashrc file in that port-specific directory is already in place
+	and this file is not needed.
+
+vcc_setup:
+	Used to establish the Visual C++ environment if the MicroMonitor
+	host-based tools are being built with VCC.
+
+umon_setup:
+	Called by every port-specific bashrc file.  Usually there is no
+	need to modify umon_profile, just copy it to $UMONTOP/host/bin.
+	It assumes it is being executed after the port-specific bashrc
+	file, so it takes what it needs from that setup.

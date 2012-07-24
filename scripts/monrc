@@ -1,0 +1,177 @@
+##########################################################################
+# File name: monrc
+# Main autoexec script used by uMon when it starts.
+##########################################################################
+
+set MEM_CB_TX				0x40400000				# TX CB will be used for uMon image temporary buffer 
+set MEM_CB_RX				0x50400000				# RX CB will be used for uMon image temporary buffer (for validation)
+set FLASH_SECSIZE				 65536				# Flash sector size (each write operation executes per a sector)
+set FLASH_SECSIZE_K				   64K				# Flash sector size in kilobytes
+set FLASH_BANK_ID_UMON				 0				# Bank ID of the uMon's & JFFS2 flash
+
+set UMON_FILE		boot_flash.hex.bin				# uMon's image (including TFS) file name on TFTP server
+set UMON_FILE_TFS_OFFS		   0xE0000				# Offset (in bytes) to TFS location inside UMON_FILE (it's sector #14, starting from 0)
+set UMON_FLASH_NSECTORS			    16				# Number of flash sectors utilized by uMon. Thus, the uMon image size is UMON_FLASH_NSECTORS x FLASH_SECSIZE
+set UMON_FLASH_ADDR					 0				# uMon + TFS start address on the flash for the burning
+
+set JFFS2BASE				0x00100000				# JFFS2 file system base address (mandatory uMon's var!)
+
+set APPS_BANK0_ADDR			    	32				# bank#0 apps JFFS2: image start address on the flash (sector#)
+set APPS_BANK0_SIZE		   	  0x700000				# bank#0 apps JFFS2: image size in bytes
+set APPS_BANK0_SIZE_NSECT		   112				# bank#0 apps JFFS2: number of flash sectors utilized by apps JFFS2 image (7Mb). Thus, the JFFS2 image size is APPS_BANK0_SIZE_NSECT x FLASH_SECSIZE
+
+set USER_BANK3_ADDR 			     0				# bank#3 user JFFS2: start sector#
+set USER_BANK3_SIZE 		  0xF00000				# bank#3 user JFFS2: image size in bytes
+set USER_BANK3_SIZE_NSECT		   240				# bank#3 user JFFS2: image size in number of sectors
+
+set LOC_BANK3_ADDR 			       240				# bank#3 local JFFS2: start sector#
+set LOC_BANK3_SIZE 			  0x100000				# bank#3 local JFFS2: image size in bytes
+set LOC_BANK3_SIZE_NSECT		   	16				# bank#3 local JFFS2: image size in number of sectors
+
+set TFS_ADDR				   0x60000				# TFS-mirroring start address in RAM (may be used for direct access when upgrading in some cases. Note: it != UMON_FILE_TFS_OFFS because UMON_FILE contains sevaral uMON binaries for different CPU's)
+set TFS_SIZE				   0x20000				# TFS-mirroring size in bytes
+
+set APPRAMBASE				   0x80000				# Redefine APPRAMBASE to be next to TFS! We need at least 128K for APPRAMBASE (used when defragmenting TFS)
+#set APPRAMBASE_SIZE		   0x40000				# APPRAMBASE area size
+
+set UMON_TMP_HEAP			   0xC0000				# tmp buf used by run script for additional uMON heap when decompressing
+set UMON_TMP_HEAP_SIZE		   0x40000				# Size of UMON_TMP_HEAP
+
+set UMON_TMP_DOWNLOAD		  0x800000				# uMon tmp buffer for downloading files; it's size should fit to max size of possibly downloaded file
+set UMON_TMP_DOWNLOAD_DEF	$UMON_TMP_DOWNLOAD		# In the case UMON_TMP_DOWNLOAD is changed, it may be reset to this value
+
+set LINUX_RAM_START 		0x10000000				# Linux start address
+set LINUX_RAM_SIZE  		 0x4000000				# Linux image max size (64M)
+set LINUX_IMAGE_BASE 		0x10008000				# Linux file-image should be downloaded here (LINUX_RAM_START + 0x8000)
+set LINUX_IMAGE_NAME 			 Image				# Linux binary image file name
+
+set BASIC_PARAMS_ADDR 		0x404EFCC0  			# Address of Basic parameters structure (must correspond to Memory Locator DB)
+set BASIC_PARAMS_SIZE			 0x340				# Max size of Basic parameters structure
+
+set RUN_ARG1 					  tftp				# run script def value for argument#1
+set RUN_ARG2 				   nolinux				# run script def value for argument#2
+
+-network
+
+if $ETHERADD sne \$ETHERADD goto next_1
+echo Set ETHERADD:
+read ETHERADD
+
+# next_1:
+if $HOSTNAME sne \$HOSTNAME goto next_2
+echo Set HOSTNAME:
+read HOSTNAME
+
+# next_2:
+if $IPADD sne \$IPADD goto next_3
+echo Set IPADD:
+read IPADD
+
+# next_3:
+if $IPADD seq DHCP goto next_31
+set IPADD_BKP $IPADD
+goto next_4
+# next_31
+echo Set IPADD_BKP:
+read IPADD_BKP
+
+# next_4:
+if $GIPADD sne \$GIPADD goto next_5
+echo Set GIPADD:
+read GIPADD
+
+# next_5:
+if $NETMASK sne \$NETMASK goto next_6
+echo Set NETMASK:
+read NETMASK
+
+# next_6:
+if $TFTP_SERVER_ADDR sne \$TFTP_SERVER_ADDR goto skip_network_creation
+echo Set TFTP_SERVER_ADDR:
+read TFTP_SERVER_ADDR
+
+echo set ETHERADD 			$ETHERADD	>$APPRAMBASE,256
+echo set HOSTNAME			$HOSTNAME	>>
+echo set IPADD 				$IPADD 		>>
+echo set IPADD_BKP			$IPADD_BKP 	>>
+echo set GIPADD 			$GIPADD 	>>
+echo set NETMASK 			$NETMASK 	>>
+echo set TFTP_SERVER_ADDR	$TFTP_SERVER_ADDR >>
+echo >>network,e
+
+# skip_network_creation:
+
+# For uMon Windows simulator stop here!
+# exit
+
+gosub ConfigGmac
+sleep -l 25000
+
+gosub SetPostedWrite4AllNodes
+
+# Set default activity mask
+pm -4 0xE573E004 0x931E3F00
+
+# Initialize JTAG debugger mask
+fm -c 0xC04FFF80 32 0xFF
+
+# Load Basic parameters structure
+set STRUCTBASE $BASIC_PARAMS_ADDR
+set -o STRUCTBASE 0x80000000	# make the addr non-cacheable
+pm -4 $STRUCTBASE 0xFFFFFFFF	# set the struct version word 0xFFFFFFFF for the case params is absent
+
+# 'structfile' is default value for STRUCTFILE, anyway set it: 
+set STRUCTFILE structfile
+-params_init
+
+# Set user's configuration script name for OptRunJffs or OptRunTfs routines
+set OPT_SCRIPT_RUN params
+
+# call OPT_SCRIPT_RUN, if it exist on TFS
+gosub OptRunTfs
+# skip_params_tfs:
+
+exit
+
+
+########################################################
+# Subroutine: SetPostedWrite4AllNodes
+# Note: Nodes Posted Write address is calculated as follows:
+# (For each node there is a Programming Model base addresses)
+# For CPU: it's PM base + 0x400
+# For DSP: it's PM base + 0x550
+# SetPostedWrite4AllNodes:
+set idx 1
+# NODES_LOOP:
+# 	Table Nodes/Program Model (PM) addresses
+# 	Nodes:			TX_CPU0		TX_CPU1		TX_CPU2		TX_CPU3		TX_DSP0		TX_DSP1		RX_CPU0		RX_CPU1		RX_DSP0		RX_DSP1		RX_DSP2		RX_DSP3		NPU_CPU0	NPU_CPU1	NPU_CPU2	NPU_CPU3	NPU_CPU4	NPU_CPU5	
+item $idx PMADDR 	0xC4720400	0xC472A400	0xC4740400	0xC474A400	0xC4700550	0xC470A550	0xD498A400	0xD491E400	0xD4900550	0xD490A550	0xD494C550	0xD4956550	0xE5700400	0xE5708400	0xE5710400	0xE5718400	0xE5740400	0xE5748400	
+if $PMADDR seq \$PMADDR return
+pm -4 $PMADDR 1
+set -i idx
+goto NODES_LOOP
+
+
+########################################################
+# Subroutine: OptRunTfs
+# run $OPT_SCRIPT_RUN from TFS in the case it exists
+# OptRunTfs:
+set this_size
+tfs size $OPT_SCRIPT_RUN this_size
+if $this_size seq \$this_size return	# file OPT_SCRIPT_RUN doesn't exist
+echo Running $OPT_SCRIPT_RUN from TFS
+$OPT_SCRIPT_RUN
+return
+
+
+########################################################
+# Subroutine: ConfigGmac
+# ConfigGmac:
+pm -4 0xe5738014 0x8080
+pm -4 0xe5738010 0xadc3
+pm -4 0xe5738014 0x4e09
+pm -4 0xe5738010 0xa803
+pm -4 0xe5738014 0xc003
+pm -4 0xe5738010 0xa843
+pm -4 0xe5738010 0xb043
+return

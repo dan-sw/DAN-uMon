@@ -1,0 +1,20 @@
+#
+# When files are checked out of CVS using a cvs client
+# on windows, the code has DOS-ish CRLF problems, so
+# this script can be run to clear that up.
+# If anybody is reading this and knows how to tell CVS
+# NOT to do that, please inform me!
+# Ed Sutter
+#
+find . -name '*.[chsS]' -exec d2u {} \;
+find . -name makefile -exec d2u {} \;
+find . -name bashrc -exec d2u {} \;
+find . -name '*.make' -exec d2u {} \;
+find . -name '*.BAS' -exec d2u {} \;
+find . -name '*.mac' -exec d2u {} \;
+find . -name '*.scr' -exec d2u {} \;
+find . -name '*.ldt' -exec d2u {} \;
+find . -name 'README' -exec d2u {} \;
+find . -name 'umon_setup' -exec d2u {} \;
+find . -name 'bdi2000.cfg' -exec d2u {} \;
+find . -name '_vimrc' -exec d2u {} \;

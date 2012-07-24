@@ -1,0 +1,47 @@
+This directory contains source and makefile to build the PICO-C
+interpreter as a uMon application.  As of this writing, picoc-0.93 is the
+version used to build with.  Pico-C is a small/compact C interpreter
+written by Zik Saleeba, and available  at http://code.google.com/p/picoc/.
+
+Note that this is not a complete distribution of the pico-c source tree;
+it only includes the files that are needed to build for a uMon-based
+application.  For a full tree that includes additional source and
+documentation refer to the website.
+
+This directory is built so that the 'pcc' application can be installed
+as an executable file into TFS and then used to run another '.c' file
+in TFS.  So, for example, if you had the file try.c in tfs...
+
+int i;
+for(i=0;i<5;i++)
+   printf("i=%d\n",i);
+
+and at the uMon prompt you typed:
+
+uMON>pcc try.c
+
+the output would be...
+
+i=0
+i=1
+i=2
+i=3
+i=4
+
+Application Exit Status: 0 (0x0)
+uMON>
+
+
+Note that this is an EXTREMELY simple example.  For more examples
+refer to the tests directory that comes with the official picoc 
+distribution.
+
+Zik has incorporated support in the main tree of picoc to support a
+build that can be used by uMon, so its pretty easy to get started.
+If you just use this tree, it will work as is.  If you choose to get
+a more recent version of pico-c you can simply put the new release under
+this directory and set the PICOCDIR variable in the makefile appropriately.
+
+Refer to makefile for details on how to build for various CPU architectures
+and target configurations.  As of this writing it has been tested on
+big (PPC) and little (Blackfin) endian CPUs.

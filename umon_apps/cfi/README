@@ -1,0 +1,9 @@
+This directory contains source and makefile to build a small
+uMon-resident application that carry's out some of the CFI
+(Common Flash Interface) specification. 
+
+Note that this can be built for a variety of targets, but does
+require that the peer directory "demo" be present.
+
+Refer to makefile for details on how to build for various CPU
+architectures and target configurations.

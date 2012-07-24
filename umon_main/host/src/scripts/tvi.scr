@@ -1,0 +1,43 @@
+#!/bin/bash
+# 
+# tvi:
+# ttftp and vi...
+# Makes it quite easy to edit an ASCII file in TFS.
+# It simply wraps 'vi' with ttftp commands to retrieve and then
+# reload the file to be edited.
+#
+usage()
+{
+	echo "Usage: tvi {filename_on_target}  [target ip address]"
+	echo "(uses \$TARGET_IP if set)"
+}
+
+if [ $# = 1 ]
+then
+	if [ "$TARGET_IP" = "" ] 
+	then
+		usage
+		exit 1
+	fi
+elif [ $# = 2 ]
+then
+	export TARGET_IP=$2
+else
+	usage
+	exit 1
+fi
+
+tmpfile=`mktemp`
+ttftp $TARGET_IP get '.' $tmpfile
+export fullname=`grep ^${1}, $tmpfile`
+
+ttftp $TARGET_IP get $1 $tmpfile
+if [ $? != 0 ]
+then
+	exit
+fi
+
+vi $tmpfile
+
+ttftp $TARGET_IP put $tmpfile $fullname
+rm $tmpfile

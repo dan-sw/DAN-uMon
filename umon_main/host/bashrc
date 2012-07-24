@@ -1,0 +1,12 @@
+export PS1=UMONHOST:
+export EDITOR=vi
+export TITLE="UMON Host Tools"
+export UMONTOP=../umon_main
+export HOME=`pwd`
+unset TERM
+if [ -f bin/umon_setup ]
+then
+	. bin/umon_setup
+else
+	echo "Umon host tools not built."
+fi

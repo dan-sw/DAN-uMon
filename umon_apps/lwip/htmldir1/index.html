@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>${PLATFORM}</title>
+</head>
+<body bgcolor="#60e040" text="black">
+<center>
+<a href="http://www.microcross.com/html/micromonitor.html">
+<img border="3" alt="Go to uMon homepage" src="umonheader.jpg"></a>
+<br>
+<font face="Arial">
+<b>
+${PLATFORM}
+</b>
+<pre>
+IP=${IPADD}
+Netmask=${NETMASK}
+Gateway=${GIPADD}
+</pre>
+</center>
+<form method=POST action=mon_docommand>
+uMon Command: <input type=text size=64 name="umoncmd"> 
+<input type=submit value="Go">
+</form>
+<br>
+</font>
+</body>
+</html>

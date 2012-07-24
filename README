@@ -1,0 +1,66 @@
+Welcome to MicroMonitor!
+
+
+This is the top-level of the MicroMonitor CVS.
+
+There are three main directories:
+umon_main:
+  This is the common code reusable on various targets as the core
+  of MicroMonitor's functionality.
+umon_ports:
+  This directory contains the public ports of MicroMonitor.  Each
+  subdirectory contains the makefile and target-specific code for
+  one uMon port.
+umon_apps:
+  This code provides a few different application examples for use
+  after the bootmonitor is built and running on your target.  The
+  best place to go there is umon_apps/demo.  This directory contains
+  the source and makefile that support building a basic application
+  for any target supported by MicroMonitor.  
+
+To get started, refer to umon_main/README.
+
+
+######################
+#
+# SVN User Notes:
+#
+As of release 1.17 the uMon tree is under SVN (instead of CVS).
+To diff a file ignoring whitespace...
+	svn diff --diff-cmd diff -x -uw filename
+
+To retrieve the current revision...
+	svn info -r HEAD
+
+To review recent changes...
+	svn log -vr 2186:2100	(range may vary)
+
+To diff a file relative to the HEAD, run...
+	svn diff -r HEAD filename
+
+To create a new uMon release...
+	1 Retrieve a "fresh" tree from SVN so that we don't miss a file
+	  that may be in the local directory, but not committed.
+	2 Run 'make rebuild 2>&1 | tee make.out' under umon_ports and
+	  verify that the build was clean.
+	3 Update common/version.h
+	4 When committing the verion.h file, note the SVN release and
+	  make a note of it at the bottom of this file.  Then commit this
+          file.  
+	5 Copy the umon tree to umon-X.YY, then remove all .svn and
+	  .subversion directories.  Run 'make clobber' under umon_ports
+	  and umon_main/host.
+	6 Create new tarball.
+
+If these instructions are followed, then in theory, this file will be
+the last committed file in the release; hence the Revision of this file
+(keyword below) can be used as the release point of reference...
+
+Revision: $Revision: 2387 $
+
+######################
+#
+# SVN Revision-to-uMon release...
+#
+uMon1.17: Committed revision 1924 (Mar 13, 2009).
+uMon1.18: Committed revision 2386 (Jan 23, 2010).

@@ -1,0 +1,17 @@
+# newtree:
+# Used by me each time I pull down a new tree from CVS to Windows.
+#
+pwd=`pwd`
+base=`basename $pwd`
+if [ "$base" != umon ]
+then
+	echo "Must be at \'umon\' directory level."
+	exit 0
+fi
+
+chmod +x umon_main/host/src/scripts/umon_d2u
+umon_main/host/src/scripts/umon_d2u
+cd umon_ports
+make vimrc
+cd ../umon_main/host
+make OSTYPE=cygwin rebuild

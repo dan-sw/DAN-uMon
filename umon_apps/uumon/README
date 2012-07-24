@@ -1,0 +1,28 @@
+This is an example of a VERY-VERY cut-back version of uMon
+(called uuMon, or micro-uMon) for use in a memory-limited system.
+
+Using the config.h file, facilities can be enabled as needed.
+If ethernet and flash are not enabled, it fits in under 16K total space
+(text/data/bss/stack) and provides xmodem data transfer, DM, PM, MT and
+CALL commands.  With both ethernet and flash enabled, it still fits
+in less than 32K, and provides a reasonably good set of bootloader-ish
+facilities.
+
+Note that this is in the "umon_apps" directory instead of being an
+alternative "uMon" build.  There are a few reasons for this...
+
+First, to achieve this small of a build in the uMon source tree would
+have required an enourmous amount of "ifdeffing" so I chose to isolate
+this version and just cut peices out as needed to make it smaller.
+
+Second, it doesn't support many ports.  Actually, it doesn't support
+ANY ports as is.  I built this as an application that can sit ontop
+of a Blackfin-based board that I have so that I could test the
+functionality out at the command line level.   If you think this is
+a useful bootloader, then you'll have to work it into shape as a standalone
+bootable image.  The only code you should have to change is config.h,
+entry.S, makefile and the stuff under the port directory.
+All other portions of the code should be independent of the target.
+
+Have fun...
+

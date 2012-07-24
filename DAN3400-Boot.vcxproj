@@ -1,0 +1,737 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="uMon-WinSim|Win32">
+      <Configuration>uMon-WinSim</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="uMon|Win32">
+      <Configuration>uMon</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="umon_main\host\src\comsrc\crc32.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\comsrc\version.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\moncmd\moncmd.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\tnt\telnetd.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\tnt\tnt.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\tnt\utils.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\ttftp\ttftp.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\utils\aout.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\utils\coff.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\utils\elf.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\utils\packdata.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\utils\tfs.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\utils\tfsprivate.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\utils\utils.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\zlib\deflate.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\zlib\infblock.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\zlib\infcodes.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\zlib\inffast.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\zlib\inffixed.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\zlib\inftrees.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\zlib\infutil.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\zlib\trees.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\zlib\zconf.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\zlib\zlib.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\host\src\zlib\zutil.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\target\common\devices.h" />
+    <ClInclude Include="umon_main\target\common\genlib.h" />
+    <ClInclude Include="umon_main\target\common\monlib.h" />
+    <ClInclude Include="umon_main\target\common\tfsprivate.h" />
+    <ClInclude Include="umon_main\target\dev\uart16550.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_main\target\zlib\deflate.h" />
+    <ClInclude Include="umon_main\target\zlib\infblock.h" />
+    <ClInclude Include="umon_main\target\zlib\infcodes.h" />
+    <ClInclude Include="umon_main\target\zlib\inffast.h" />
+    <ClInclude Include="umon_main\target\zlib\inffixed.h" />
+    <ClInclude Include="umon_main\target\zlib\inftrees.h" />
+    <ClInclude Include="umon_main\target\zlib\infutil.h" />
+    <ClInclude Include="umon_main\target\zlib\trees.h" />
+    <ClInclude Include="umon_main\target\zlib\zconf.h" />
+    <ClInclude Include="umon_main\target\zlib\zlib.h" />
+    <ClInclude Include="umon_main\target\zlib\zutil.h" />
+    <ClInclude Include="umon_ports\dan3X00\3400\CGEN.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_ports\dan3X00\3400\common.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_ports\dan3X00\3400\config.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_ports\dan3X00\3400\cpuio.h" />
+    <ClInclude Include="umon_ports\dan3X00\3400\dancli.h" />
+    <ClInclude Include="umon_ports\dan3X00\3400\ddr.h" />
+    <ClInclude Include="umon_ports\dan3X00\3400\flash3400.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_ports\dan3X00\3400\gmac_mon.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_ports\dan3X00\3400\queue.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_ports\dan3X00\3400\spi.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_ports\dan3X00\3400\spifmap.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_ports\dan3X00\3400\target_version.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_ports\dan3X00\3400\tfsdev.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_ports\dan3X00\3400\xcmddcl.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_ports\dan3X00\3400\xcmdtbl.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_ports\dan3X00\arm3400\cpu.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_ports\dan3X00\cpu3400\cpu.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_ports\dan3X00\dsp3400\cpu.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="umon_ports\dan3X00\win3400\config.h" />
+    <ClInclude Include="umon_ports\dan3X00\win3400\tfsdev.h" />
+    <ClInclude Include="umon_ports\dan3X00\win3400\xcmddcl.h" />
+    <ClInclude Include="umon_ports\dan3X00\win3400\xcmdtbl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="umon_apps\demo_dan\demo_main.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\comsrc\builtwith.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\comsrc\crc32.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\comsrc\getopt.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\comsrc\version.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\maccrypt\crypt.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\maccrypt\main.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\moncmd\main.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\moncmd\moncmd.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\newmon\newmon.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\tnt\telnetd.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\tnt\tnt.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\tnt\utils.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\ttftp\main.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\ttftp\tftpsrvr.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\ttftp\tftptest.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\ttftp\ttftp.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\aout.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\backtrace.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\bedit.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\bin2array.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\bin2srec.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\bswap.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\chopline.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\coff.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\d2u.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\defdate.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\elf.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\f2mem.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\fcrc.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\fsize.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\ibsi.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\ltfs.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\make2flist.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\mkbin.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\mkbmp.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\mktfsimg.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\mkupdate.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\monsym.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\packdata.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\tfs.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\title.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\u2d.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\utils.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\vsub.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\utils\what.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\zlib\adler32.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\zlib\compress.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\zlib\crc32.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\zlib\deflate.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\zlib\example.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\zlib\gzio.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\zlib\infblock.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\zlib\infcodes.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\zlib\inffast.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\zlib\inflate.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\zlib\inftrees.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\zlib\infutil.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\zlib\maketree.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\zlib\minigzip.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\zlib\trees.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\zlib\uncompr.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\host\src\zlib\zutil.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\target\common\arp.c" />
+    <ClCompile Include="umon_main\target\common\bbc.c" />
+    <ClCompile Include="umon_main\target\common\cache.c" />
+    <ClCompile Include="umon_main\target\common\cast.c" />
+    <ClCompile Include="umon_main\target\common\chario.c" />
+    <ClCompile Include="umon_main\target\common\cmdtbl.c" />
+    <ClCompile Include="umon_main\target\common\crypt.c" />
+    <ClCompile Include="umon_main\target\common\cstart.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\target\common\dhcpboot.c" />
+    <ClCompile Include="umon_main\target\common\dhcp_00.c" />
+    <ClCompile Include="umon_main\target\common\docmd.c" />
+    <ClCompile Include="umon_main\target\common\edit.c" />
+    <ClCompile Include="umon_main\target\common\ee.c" />
+    <ClCompile Include="umon_main\target\common\env.c" />
+    <ClCompile Include="umon_main\target\common\ethernet.c" />
+    <ClCompile Include="umon_main\target\common\flash.c" />
+    <ClCompile Include="umon_main\target\common\gdb.c" />
+    <ClCompile Include="umon_main\target\common\genlib.c" />
+    <ClCompile Include="umon_main\target\common\icmp.c" />
+    <ClCompile Include="umon_main\target\common\if.c" />
+    <ClCompile Include="umon_main\target\common\igmp.c" />
+    <ClCompile Include="umon_main\target\common\jffs2.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\target\common\ledit_vt100.c" />
+    <ClCompile Include="umon_main\target\common\malloc.c" />
+    <ClCompile Include="umon_main\target\common\memcmds.c">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">4996;4146;4273;4018</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="umon_main\target\common\memtrace.c" />
+    <ClCompile Include="umon_main\target\common\misc.c">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">4996;4146;4273;4244</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="umon_main\target\common\misccmds.c">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">4996;4146;4273;4244</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="umon_main\target\common\monbuilt.c" />
+    <ClCompile Include="umon_main\target\common\moncom.c" />
+    <ClCompile Include="umon_main\target\common\monlib.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\target\common\monprof.c" />
+    <ClCompile Include="umon_main\target\common\mprintf.c" />
+    <ClCompile Include="umon_main\target\common\password.c" />
+    <ClCompile Include="umon_main\target\common\redirect.c" />
+    <ClCompile Include="umon_main\target\common\reg_cache.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\target\common\sbrk.c" />
+    <ClCompile Include="umon_main\target\common\start.c" />
+    <ClCompile Include="umon_main\target\common\struct.c">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">4996;4146;4273;4244</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="umon_main\target\common\symtbl.c" />
+    <ClCompile Include="umon_main\target\common\syslog.c" />
+    <ClCompile Include="umon_main\target\common\tcpstuff.c" />
+    <ClCompile Include="umon_main\target\common\tfs.c" />
+    <ClCompile Include="umon_main\target\common\tfsapi.c" />
+    <ClCompile Include="umon_main\target\common\tfsclean1.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\target\common\tfsclean2.c" />
+    <ClCompile Include="umon_main\target\common\tfscli.c" />
+    <ClCompile Include="umon_main\target\common\tfsloader.c" />
+    <ClCompile Include="umon_main\target\common\tfslog.c" />
+    <ClCompile Include="umon_main\target\common\tftp.c" />
+    <ClCompile Include="umon_main\target\common\timestuff.c" />
+    <ClCompile Include="umon_main\target\common\xmodem.c" />
+    <ClCompile Include="umon_main\target\cpu\tensilica\cache_ten.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\target\cpu\tensilica\dis_ten.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\target\dev\uart16550.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\target\fs\elmfatfs\cc932.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\target\fs\elmfatfs\ff.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\target\fs\elmfatfs\ffcmd.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_main\target\fs\jffs2\zlib_inflate\jz_infblock.c" />
+    <ClCompile Include="umon_main\target\fs\jffs2\zlib_inflate\jz_infcodes.c" />
+    <ClCompile Include="umon_main\target\fs\jffs2\zlib_inflate\jz_inffast.c" />
+    <ClCompile Include="umon_main\target\fs\jffs2\zlib_inflate\jz_inflate.c" />
+    <ClCompile Include="umon_main\target\fs\jffs2\zlib_inflate\jz_inftrees.c" />
+    <ClCompile Include="umon_main\target\fs\jffs2\zlib_inflate\jz_infutil.c" />
+    <ClCompile Include="umon_main\target\glib\abs.c" />
+    <ClCompile Include="umon_main\target\glib\asctime.c" />
+    <ClCompile Include="umon_main\target\glib\atoi.c" />
+    <ClCompile Include="umon_main\target\glib\crc16.c" />
+    <ClCompile Include="umon_main\target\glib\crc32.c" />
+    <ClCompile Include="umon_main\target\glib\ctypetbl.c" />
+    <ClCompile Include="umon_main\target\glib\div.c" />
+    <ClCompile Include="umon_main\target\glib\getopt.c" />
+    <ClCompile Include="umon_main\target\glib\gmtime.c">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">4996;4146;4273;4018</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="umon_main\target\glib\inrange.c" />
+    <ClCompile Include="umon_main\target\glib\lceil.c" />
+    <ClCompile Include="umon_main\target\glib\ldiv.c" />
+    <ClCompile Include="umon_main\target\glib\memccpy.c" />
+    <ClCompile Include="umon_main\target\glib\memchr.c" />
+    <ClCompile Include="umon_main\target\glib\memcmp.c" />
+    <ClCompile Include="umon_main\target\glib\memcpy.c" />
+    <ClCompile Include="umon_main\target\glib\memset.c" />
+    <ClCompile Include="umon_main\target\glib\pollconsole.c" />
+    <ClCompile Include="umon_main\target\glib\prascii.c" />
+    <ClCompile Include="umon_main\target\glib\printmem.c" />
+    <ClCompile Include="umon_main\target\glib\smemcpy.c" />
+    <ClCompile Include="umon_main\target\glib\smemset.c" />
+    <ClCompile Include="umon_main\target\glib\sprnfloat.c">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">$(VCInstallDir)include;umon_main\target\common;umon_main\target\dev;umon_main\target\flash\devices;umon_main\target\fs\jffs2\zlib_inflate;umon_ports\dan3X00\cpu3400;</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="umon_main\target\glib\strcasecmp.c" />
+    <ClCompile Include="umon_main\target\glib\strcat.c" />
+    <ClCompile Include="umon_main\target\glib\strchr.c" />
+    <ClCompile Include="umon_main\target\glib\strcmp.c" />
+    <ClCompile Include="umon_main\target\glib\strcpy.c" />
+    <ClCompile Include="umon_main\target\glib\strcspn.c" />
+    <ClCompile Include="umon_main\target\glib\strlen.c" />
+    <ClCompile Include="umon_main\target\glib\strncat.c" />
+    <ClCompile Include="umon_main\target\glib\strncmp.c" />
+    <ClCompile Include="umon_main\target\glib\strncpy.c" />
+    <ClCompile Include="umon_main\target\glib\strpbrk.c" />
+    <ClCompile Include="umon_main\target\glib\strrchr.c" />
+    <ClCompile Include="umon_main\target\glib\strspn.c" />
+    <ClCompile Include="umon_main\target\glib\strstr.c" />
+    <ClCompile Include="umon_main\target\glib\strtok.c" />
+    <ClCompile Include="umon_main\target\glib\strtol.c" />
+    <ClCompile Include="umon_main\target\glib\strtolower.c" />
+    <ClCompile Include="umon_main\target\glib\strtoupper.c" />
+    <ClCompile Include="umon_main\target\glib\swap.c" />
+    <ClCompile Include="umon_main\target\glib\ticktock.c" />
+    <ClCompile Include="umon_main\target\glib\ulceil.c" />
+    <ClCompile Include="umon_main\target\zlib\adler32.c" />
+    <ClCompile Include="umon_main\target\zlib\gzio.c" />
+    <ClCompile Include="umon_main\target\zlib\infblock.c" />
+    <ClCompile Include="umon_main\target\zlib\infcodes.c" />
+    <ClCompile Include="umon_main\target\zlib\inffast.c" />
+    <ClCompile Include="umon_main\target\zlib\inflate.c" />
+    <ClCompile Include="umon_main\target\zlib\inftrees.c" />
+    <ClCompile Include="umon_main\target\zlib\infutil.c" />
+    <ClCompile Include="umon_main\target\zlib\trees.c" />
+    <ClCompile Include="umon_main\target\zlib\uncompr.c" />
+    <ClCompile Include="umon_main\target\zlib\zcrc32.c" />
+    <ClCompile Include="umon_main\target\zlib\zutil.c" />
+    <ClCompile Include="umon_ports\dan3X00\3400\CGEN.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\3400\common.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\3400\dancli.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\3400\ddr.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\3400\etherdev.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\3400\except.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\3400\flash3400.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\3400\gmac_mon.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\3400\spi.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\3400\umon_loader.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\3400\version.c">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">umon_ports\dan3X00\win3400;umon_main\target\common;umon_main\target\dev;umon_main\target\flash\devices;umon_main\target\fs\jffs2\zlib_inflate;umon_ports\dan3X00\3400;umon_ports\dan3X00\cpu3400</AdditionalIncludeDirectories>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\arm3400\cpu.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\arm3400\cpuio.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\arm3400\etherdev.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\arm3400\startup.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\cpu3400\cpu.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\cpu3400\cpuio.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\cpu3400\startup.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\dsp3400\cpu.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\dsp3400\cpuio.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\dsp3400\startup.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\win3400\cache_win.c" />
+    <ClCompile Include="umon_ports\dan3X00\win3400\cpuio.c" />
+    <ClCompile Include="umon_ports\dan3X00\win3400\except.c" />
+    <ClCompile Include="umon_ports\dan3X00\win3400\flash_sim.c" />
+    <ClCompile Include="umon_ports\dan3X00\win3400\startup.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="description.txt" />
+    <None Include="hex2bin.pl" />
+    <None Include="makefile" />
+    <None Include="README" />
+    <None Include="scripts\erbank" />
+    <None Include="scripts\flashtest" />
+    <None Include="scripts\jffs" />
+    <None Include="scripts\monrc_cb_only" />
+    <None Include="scripts\msim" />
+    <None Include="scripts\network" />
+    <None Include="scripts\DAN3X00_run_tests.script" />
+    <None Include="scripts\DAN3X00_test.script" />
+    <None Include="scripts\DAN3X00_test_list.script" />
+    <None Include="scripts\linux" />
+    <None Include="scripts\monrc" />
+    <None Include="scripts\reg_test_prep.script" />
+    <None Include="scripts\run" />
+    <None Include="scripts\runs" />
+    <None Include="scripts\status" />
+    <None Include="scripts\structfile" />
+    <None Include="scripts\upgrade" />
+    <None Include="scripts\ver" />
+    <None Include="start_umon.cmm" />
+    <None Include="tfs.list" />
+    <None Include="tfs_cb_only.list" />
+    <None Include="umon_main\host\makefile" />
+    <None Include="umon_main\host\src\utils\makefile">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="umon_main\host\src\utils\mktfsimg.spec">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="umon_main\target\make\common.make" />
+    <None Include="umon_main\target\make\defaults.make" />
+    <None Include="umon_main\target\make\objects.make" />
+    <None Include="umon_main\target\make\rules.make" />
+    <None Include="umon_ports\dan3X00\3400\3400.make">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="umon_ports\dan3X00\3400\piggy.S">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="umon_ports\dan3X00\3400\ten3400.make">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="umon_ports\dan3X00\arm3400\arm2400.ld">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="umon_ports\dan3X00\arm3400\arm3400.ld">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="umon_ports\dan3X00\arm3400\makefile">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="umon_ports\dan3X00\arm3400\startup_entry.S">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="umon_ports\dan3X00\cpu3400\lsp\memmap.xmm" />
+    <None Include="umon_ports\dan3X00\cpu3400\lsp\specs" />
+    <None Include="umon_ports\dan3X00\cpu3400\lsp_piggy\memmap.xmm" />
+    <None Include="umon_ports\dan3X00\cpu3400\lsp_piggy\specs" />
+    <None Include="umon_ports\dan3X00\dsp3400\bashrc" />
+    <None Include="umon_ports\dan3X00\dsp3400\makefile">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="umon_ports\dan3X00\dsp3400\startup_entry.S">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="umon_ports\dan3X00\cpu3400\bashrc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="umon_ports\dan3X00\cpu3400\makefile">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="umon_ports\dan3X00\cpu3400\startup_entry.S">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </None>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{DE2223C5-BD76-4C79-9B7B-AAE7C8041A68}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>DAN3400-Boot</RootNamespace>
+    <SccProjectName>SAK</SccProjectName>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='uMon|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <OutDir>$(ProjectDir)umon_ports\dan3X00\arm3400\Bin_arm_deb</OutDir>
+    <IntDir>$(ProjectDir)umon_ports\dan3X00\arm3400\Bin_arm_deb</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Xtensa|Win32'">
+    <ConfigurationType>Makefile</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Xtensa-deb-uart|Win32'">
+    <ConfigurationType>Makefile</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>~$(Configuration)\</OutDir>
+    <IntDir>~$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='uMon|Win32'">
+    <NMakeBuildCommandLine>make</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>make clean</NMakeCleanCommandLine>
+    <ExecutablePath>c:\Cygwin\bin</ExecutablePath>
+    <IncludePath>umon_ports\dan3X00\3400;umon_main\target\common </IncludePath>
+    <ReferencePath />
+    <LibraryPath />
+    <SourcePath />
+    <ExcludePath />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Xtensa-deb-uart|Win32'">
+    <NMakeCleanCommandLine>make -C umon_ports\dan3X00\cpu3400 clean</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>make -C umon_ports\dan3X00\cpu3400 TARGET=1 DEBUG=1 2&gt;&amp;1 | MingwFilter.exe /oroot= /nroot=umon_ports\dan3X00\cpu3400</NMakeBuildCommandLine>
+    <ExecutablePath>c:\Cygwin\bin;C:\WINDOWS\system32;C:\WINDOWS;c:\MinGW\bin</ExecutablePath>
+    <IncludePath>c:\usr\xtensa\XtDevTools\install\builds\RC-2010.2-win32\cpu3400NGC_RC2\xtensa-elf\include</IncludePath>
+    <ReferencePath />
+    <LibraryPath />
+    <SourcePath />
+    <ExcludePath />
+    <NMakeIncludeSearchPath>c:\usr\xtensa\XtDevTools\install\builds\RC-2010.2-win32\cpu3400NGC_RC2\xtensa-elf\include</NMakeIncludeSearchPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_TIME_T_DEFINED;inline=_inline;UMON_DEBUG=1;UMON_TARGET=0</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>umon_main\target\common;umon_ports\dan3X00\win3400;umon_main\target\dev;umon_main\target\flash\devices;umon_main\target\fs\jffs2\zlib_inflate;umon_ports\dan3X00\3400;umon_ports\dan3X00\cpu3400</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996;4146;4273</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <StructMemberAlignment>1Byte</StructMemberAlignment>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

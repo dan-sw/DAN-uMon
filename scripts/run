@@ -1,0 +1,293 @@
+################################################################################
+# File name: run
+# A script to run DAN3X00 Node's applications from TFTP server or JFFS2
+# Note: When running Linux, it replaces uMON at this core
+# Usage:
+#	run [<ARG1> [<ARG2> [<ARG3>]]]
+# ARG1:
+#	- tftp (default) - get files from the TFTP server
+#  	- flash 		 - get files from the JFFS2 file systems
+#	- da			 - it's a shortcut for "run tftp dataonly"
+# ARG2:
+#   - all (default) - load and run all nodes and then linux
+#  	- linuxonly 	- load and run linux only
+#   - nolinux 		- load and run all nodes without linux; uMON stays resident
+#   - dataonly 		- load only data node
+# ARG3:
+#   - params 		- run params script from userdata-jffs, if present
+################################################################################
+
+# First, proccess ARG1 shortcuts
+if $ARG1 sne da goto shortcuts_end
+set ARG1 tftp
+set ARG2 dataonly
+# shortcuts_end:
+
+# Second, set default ARG1 & ARG2 (the defaults may be passed from monrc)
+if $ARG2 sne \$ARG2  goto def_arg_end
+set ARG2 $RUN_ARG2
+if $ARG1 sne \$ARG1  goto def_arg_end
+set ARG1 $RUN_ARG1
+if $ARG3 sne \$ARG3  goto def_arg_end
+set ARG3 $RUN_ARG3
+# def_arg_end:
+
+# Save ARG1 & ARG2 values in ARG1_ & ARG2_ (it may be cleared after calling other batch files)
+set ARG1_ $ARG1
+set ARG2_ $ARG2
+
+
+# Reset UMON_TMP_DOWNLOAD address to its default
+set UMON_TMP_DOWNLOAD	$UMON_TMP_DOWNLOAD_DEF
+
+# Build nodes list
+set NODE_DSP_NAMES      TX_DSP0 TX_DSP1 RX_DSP0 RX_DSP1 RX_DSP2 RX_DSP3
+set NODE_CPU_NAMES      TX_CPU0 TX_CPU1 TX_CPU2 TX_CPU3 RX_CPU0 RX_CPU1 NPU_CPU0 NPU_CPU1 NPU_CPU2 NPU_CPU3 NPU_CPU4 NPU_CPU5
+set NODE_ARM_NAMES      NPU_ARM0 NPU_ARM1 NPU_ARM2
+
+set NODE_DSP_RESETS     0x1fc 0x204 0x20c 0x214 0x21c 0x224
+set NODE_CPU_RESETS     0x22C 0x234 0x23C 0x244 0x24C 0x254 0x25C 0x264 0x26C 0x274 0x27C 0x284
+set NODE_ARM_RESETS     0x28C 0x294 0x29C
+
+set NODE_DSP_MASKS		0x00100000 0x00200000 0x10000000 0x20000000 0x40000000 0x80000000
+set NODE_CPU_MASKS		0x00010000 0x00020000 0x00040000 0x00080000 0x01000000 0x02000000 0x00000100 0x00000200 0x00000400 0x00000800 0x00001000 0x00002000
+set NODE_ARM_MASKS		0x00000001 0x00000002 0x00000004
+
+set NODE_ALL_MASKS		0
+set CLK_GEN_BASE        0xE573E000
+set NODE_FILE_SUFFIX    .ezip
+
+set LINUX_PRESENT 		0
+
+set node_id 			1
+
+# Allocate additional heap needed for unzipping
+-heap -X $UMON_TMP_HEAP,$UMON_TMP_HEAP_SIZE
+
+if $ARG3 seq params  goto arg3_params
+goto arg3_end
+# arg3_params:
+jffs local
+# call OPT_SCRIPT_RUN, if it exist on JFFS2
+gosub OptRunJffs
+# arg3_end:
+
+if $ARG1_ seq flash  goto arg1_flash
+# arg1_tftp:   by default
+set GET_CMD		GetFileTftp
+goto arg1_end
+# arg1_flash:
+set GET_CMD		GetFileJffs2
+jffs apps
+# arg1_end:
+
+if $ARG2_ seq linuxonly  goto LINUX_LOAD
+
+# Call LoadNodeData()
+gosub LoadNodeData
+if $ARG2_ seq dataonly exit
+
+# Call LoadNodeList($NODE_DSP_NAMES, $NODE_DSP_RESETS, "")
+set LoadNode_NODES		$NODE_DSP_NAMES
+set LoadNode_RESETS		$NODE_DSP_RESETS
+set LoadNode_MASKS		$NODE_DSP_MASKS
+#set LoadNode_NODEDIR - subfolder not used
+gosub LoadNodeList
+
+# Call LoadNodeList($NODE_CPU_NAMES, $NODE_CPU_RESETS, "")
+set LoadNode_NODES		$NODE_CPU_NAMES
+set LoadNode_RESETS		$NODE_CPU_RESETS
+set LoadNode_MASKS		$NODE_CPU_MASKS
+#set LoadNode_NODEDIR - subfolder not used
+gosub LoadNodeList
+
+# Call LoadNodeList($NODE_ARM_NAMES, $NODE_ARM_RESETS, "")
+set LoadNode_NODES		$NODE_ARM_NAMES
+set LoadNode_RESETS		$NODE_ARM_RESETS
+set LoadNode_MASKS		$NODE_ARM_MASKS
+#set LoadNode_NODEDIR - subfolder not used
+gosub LoadNodeList
+
+# Now load Linux image
+if $ARG2_ seq nolinux goto end_linux_load
+# LINUX_LOAD:
+echo Loading Linux image ...
+# Loading Linux image, UMON_TMP_DOWNLOAD is changed!
+set UMON_TMP_DOWNLOAD	$LINUX_IMAGE_BASE
+set GetFile_NAME 		$LINUX_IMAGE_NAME
+gosub $GET_CMD			# call GetFileTftp or GetFileJffs2 
+if $GetFile_RESULT eq 1 goto linux_present
+echo Linux is not loaded
+goto end_linux_load
+# linux_present:
+set LINUX_PRESENT 1
+linux mtd
+# end_linux_load:
+
+# If the Linux only is loaded - skip to Linux start
+if $ARG2_ seq linuxonly  goto LINUX_RUN
+
+set max $node_id
+set node_id 1
+
+set CLK_GEN_ADDR $CLK_GEN_BASE
+set -i -x CLK_GEN_ADDR 0x4
+pm -4 $CLK_GEN_ADDR $NODE_ALL_MASKS
+set -i -x CLK_GEN_ADDR 0x50
+pm -4 $CLK_GEN_ADDR 0x02220000
+set -i -x CLK_GEN_ADDR 4
+pm -4 $CLK_GEN_ADDR 0x3f3f0000
+set -i -x CLK_GEN_ADDR 4
+pm -4 $CLK_GEN_ADDR 0x00f30000
+
+echo \nNode active mask: $NODE_ALL_MASKS\n
+
+# Clear JTAG debugger mask
+fm -c 0xc04fff80 32 0
+
+# Clear prifiler buffer DAN_PROFILE_BUF
+fm -c -4 0xF096400 0x800000 0
+
+# TOP_RESET_ON_LOOP:
+if $node_id ge $max goto RESET_OFF:
+if $NODE_RESET_$node_id seq 0 goto NO_NODE_RESET_ON
+item $node_id NODE $NODE_DSP_NAMES $NODE_CPU_NAMES $NODE_ARM_NAMES
+echo Reset $NODE: $NODE_RESET_$node_id
+pm -4 $NODE_RESET_$node_id 0xffdf0000
+# NO_NODE_RESET_ON:
+set -i node_id
+goto TOP_RESET_ON_LOOP
+
+# RESET_OFF:
+set node_id 1
+
+# TOP_RESET_LOOP:
+if $node_id ge $max goto DONE:
+if $NODE_RESET_$node_id seq 0 goto NO_NODE_RESET
+item $node_id NODE $NODE_DSP_NAMES $NODE_CPU_NAMES $NODE_ARM_NAMES
+pm -4 $NODE_RESET_$node_id 0xffdfffff
+# NO_NODE_RESET:
+set -i node_id
+goto TOP_RESET_LOOP
+# DONE:
+
+if $LINUX_PRESENT eq 0 goto exit_run
+# LINUX_RUN:
+# Create the file runlinux in RAM drive, in order to call it when "cache off" disables MMU
+tfs ramdev tmp $APPRAMBASE 0x1000
+echo "cache off"												>$UMON_TMP_DOWNLOAD_DEF,256
+echo "call $LINUX_IMAGE_BASE 0 $MACHINE_ID $LINUX_RAM_START" 	>>
+echo >>//tmp/runlinux,e
+//tmp/runlinux
+echo This line should not be reached!
+# exit_run:
+heap -x
+exit
+
+
+########################################################
+# Subroutine: LoadNodeList
+# Loads images of listed nodes
+# Parameters:
+# 	$LoadNode_NODES	  - node list
+# 	$LoadNode_RESETS  - reset offset
+# 	$LoadNode_MASKS   - node presence bit masks list
+
+# LoadNodeList:
+set idx 1
+# TOP_NODE_LOOP:
+item $idx NODE $LoadNode_NODES
+if $NODE seq \$NODE goto NO_MORE_NODES
+item $idx RESET_OFFSET $LoadNode_RESETS
+item $idx BIT_MASK $LoadNode_MASKS
+set NODE_RESET_$node_id 0
+set GetFile_NAME $NODE$NODE_FILE_SUFFIX
+gosub $GET_CMD
+if $GetFile_RESULT eq 0 goto NEXT_NODE
+set -o -x NODE_ALL_MASKS $BIT_MASK
+set NODE_RESET_$node_id $CLK_GEN_BASE
+set -i -x NODE_RESET_$node_id $RESET_OFFSET
+tfs -4 ld $UMON_TMP_DOWNLOAD,Ec
+# NEXT_NODE:
+set -i idx
+set -i node_id
+goto TOP_NODE_LOOP
+
+# NO_MORE_NODES:
+return
+
+
+
+########################################################
+# Subroutine: LoadNodeData
+# Loads images of listed nodes
+# LoadNodeData:
+set GetFile_NAME DATA$NODE_FILE_SUFFIX
+gosub $GET_CMD
+if $GetFile_RESULT eq 0 goto SKIP_LD
+tfs -4 ld $UMON_TMP_DOWNLOAD,Ec
+# SKIP_LD:
+return
+
+
+
+########################################################
+# Subroutine: GetFileTftp
+# Get file from TFTP
+# Parameters:	
+# 	$GetFile_NAME	- file name to get
+# Return:
+# 	$GetFile_RESULT	- 0/1 when error/ok
+# GetFileTftp:
+
+tftp $TFTP_SERVER_ADDR get $GetFile_NAME $UMON_TMP_DOWNLOAD
+if $TFTPGET seq \$TFTPGET goto tftp_err
+set GetFile_RESULT 1
+return
+# tftp_err:
+set GetFile_RESULT 0
+return
+
+
+
+########################################################
+# Subroutine: GetFileJffs2
+# Get file from JFFS2
+# Parameters:	
+# 	$GetFile_NAME	- file name to get
+# Return:
+# 	$GetFile_RESULT	- 0/1 when error/ok
+# GetFileJffs2:
+echo Loading file $GetFile_NAME...\t\c
+jffs2 qry $GetFile_NAME
+if $JFFS2FTOT eq 1 goto jffs_continue
+set GetFile_RESULT 0
+echo Not found
+return
+# jffs_continue:
+jffs2 get $GetFile_NAME $UMON_TMP_DOWNLOAD
+set GetFile_RESULT 1
+# echo Ok - do not print 'Ok', the file size in bytes is printed by uMON
+return
+
+
+
+########################################################
+# Subroutine: OptRunJffs
+# run $OPT_SCRIPT_RUN from JFFS2 in the case it exists
+# OptRunJffs:
+set GetFile_NAME 	$OPT_SCRIPT_RUN
+gosub GetFileJffs2 
+if $GetFile_RESULT eq 1 goto params_present
+# not used: set OptRunJffs_present 0
+return
+# params_present:
+# not used: set OptRunJffs_present 1
+echo Running $OPT_SCRIPT_RUN from JFFS2
+tfs ramdev tmp $APPRAMBASE 0x4000
+tfs -fe add //tmp/params $UMON_TMP_DOWNLOAD $JFFS2FSIZE
+set STRUCTFILE structfile
+//tmp/params
+tfs rm //tmp/params
+tfs ramdev tmp $UMON_TMP_DOWNLOAD 0
+return

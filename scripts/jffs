@@ -1,0 +1,69 @@
+##########################################################################
+# File name: jffs
+# A script to mount JFFS2 file system from the flash 
+# ARG1:
+#	- apps 		- jffs2 file system from flash Bank#0 with apps
+#	- local		- jffs2 file system from flash Bank#3 with local data
+##########################################################################
+
+if $ARG1 seq local  	goto arg1_local
+
+# arg1_apps:   by default
+spif_device $FLASH_BANK_ID_UMON
+set JFFS2SIZE	  			  	$APPS_BANK0_SIZE
+set ReadJffs2Image_Name  		APPS
+set ReadJffs2Image_StartSect  	$APPS_BANK0_ADDR
+set ReadJffs2Image_NSect  		$APPS_BANK0_SIZE_NSECT
+goto arg1_end
+
+# arg1_local:
+spif_device 3
+set JFFS2SIZE	  			  	$LOC_BANK3_SIZE
+set ReadJffs2Image_Name  		LOCALDATA
+set ReadJffs2Image_StartSect  	$LOC_BANK3_ADDR
+set ReadJffs2Image_NSect  		$LOC_BANK3_SIZE_NSECT
+
+# arg1_end:
+
+gosub ReadJffs2Image
+exit
+
+
+##########################################################################
+# Subroutine: ReadJffs2Image
+# Read JFFS2 image from the flash to $JFFS2BASE
+# Parameters:
+#   - ReadJffs2Image_Name
+#   - ReadJffs2Image_StartSect
+#	- ReadJffs2Image_NSect
+# ReadJffs2Image:
+
+echo "Reading $ReadJffs2Image_Name JFFS2 image \c"
+
+set isec		0
+set iaddr_src	0
+set iaddr_dst	$JFFS2BASE
+
+# 1st loop: calc iaddr_src = $ReadJffs2Image_StartSect * $FLASH_SECSIZE
+# LOOP0:
+if $isec ge $ReadJffs2Image_StartSect goto LOOP0_DONE
+set -i isec
+set -i -x iaddr_src $FLASH_SECSIZE
+goto LOOP0
+# LOOP0_DONE:
+
+set isec 0
+# 2nd loop: read sectors
+# READ_LOOP:
+if $isec ge $ReadJffs2Image_NSect goto READ_LOOP_DONE
+spif read  $iaddr_src $iaddr_dst $FLASH_SECSIZE
+set -i isec
+set -i -x iaddr_dst $FLASH_SECSIZE
+set -i -x iaddr_src $FLASH_SECSIZE
+echo ".\c"
+goto READ_LOOP
+# READ_LOOP_DONE:
+
+echo Ok
+jffs2 rescan
+return

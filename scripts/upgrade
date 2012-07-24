@@ -1,0 +1,307 @@
+###########################################################################################
+# File name: upgrade 
+# uMon's upgrade script. Has 3-passes:
+# 1) Copies itself on tmp TFS RAM drive (the cause: the TFS itself may be upgraded in RAM) 
+# 2) Runs it from this //tmp RAM-drive.
+# 3) Exits and autostarts it againe from TFS in order to cleanup the //tmp
+# If UPGRADE_ARG is not blank it means this is the 2nd pass and it is interpreted as ARG1
+# If UPGRADE_ARG = 'cleanup' it means this is 3d pass
+# ARG1:
+#  	- all (def) - upgrade uMon image and its TFS file system
+#	- tfs 		- upgrade only tfs file system
+#	- umon  	- upgrade only uMon itself
+#	- apps 		- upgrade applications jffs2 file system
+#	- rootfs	- burn Linux RootFS file into the flash bank#1
+#	- danapps	- burn Linux DAN apps FS file into the flash bank#2
+#	- userdata	- burn Linux user apps FS file into the flash bank#3
+#	- local		- burn local FS (params on jffs2) into the flash bank#3
+###########################################################################################
+
+#******************************************************
+# 3-passes support
+if $UPGRADE_ARG sne cleanup goto skip_cleanup
+tfs rm //tmp/*
+tfs ramdev tmp $APPRAMBASE 0  # this removes ramdev if it exists
+set UPGRADE_ARG
+exit
+# skip_cleanup:
+if $UPGRADE_ARG sne \$UPGRADE_ARG goto pass_2nd
+tfs ramdev tmp $APPRAMBASE 0x4000
+set -i -x APPRAMBASE 0x4000
+if $ARG1 sne \$ARG1 goto arg1_ok
+set ARG1 all
+# arg1_ok:
+set UPGRADE_ARG $ARG1
+tfs cp upgrade //tmp/upgrade
+exit -e //tmp/upgrade
+# pass_2nd:
+set ARG1 $UPGRADE_ARG
+set UPGRADE_ARG
+#******************************************************
+
+set UPGRADE_BACKUP_PARAMS 	0						# Indicator for the case some files on TFS should be backed up, and, as result, TFS sectors (only) should be updated twice
+# KS 17.08.11: Disable the UMON_TMP_DOWNLOAD redefinition; use one defined in monrc (DDR)
+# set UMON_TMP_DOWNLOAD		$MEM_CB_TX				# Use CB-TX for uMON image temorary download buffer
+set UPGRADE_FLASHBANK		$FLASH_BANK_ID_UMON		# Flash Bank (default for uMON & apps)
+
+if $ARG1 seq umon		goto arg_mon
+if $ARG1 seq tfs		goto arg_tfs
+if $ARG1 seq apps		goto arg_apps
+if $ARG1 seq rootfs		goto arg_rootfs
+if $ARG1 seq danapps	goto arg_danapps
+if $ARG1 seq userdata	goto arg_userdata
+if $ARG1 seq local		goto arg_local
+
+# by default upgrade all: uMon+TFS
+# arg_all:
+set UPGRADE_NAME			uMon+TFS
+set UPGRADE_BACKUP_PARAMS 	1
+set UPGRADE_START_SEC		0
+set UPGRADE_FILE_RANGE_0	0
+set UPGRADE_FILE_RANGE_2	$UMON_FLASH_NSECTORS
+set UPGRADE_FILE_RANGE_1	$UPGRADE_FILE_RANGE_2
+goto tftp_umon_bin
+
+# arg_mon:
+set UPGRADE_NAME			uMon
+set UPGRADE_START_SEC		0
+set UPGRADE_FILE_RANGE_0	0
+set UPGRADE_FILE_RANGE_2	14 # 0..13 uMon code only
+set UPGRADE_FILE_RANGE_1	$UPGRADE_FILE_RANGE_2
+goto tftp_umon_bin
+
+# arg_tfs:
+set UPGRADE_NAME			TFS
+set UPGRADE_BACKUP_PARAMS 	1
+set UPGRADE_START_SEC		0
+set UPGRADE_FILE_RANGE_0	14
+set UPGRADE_FILE_RANGE_2	16 # 14..15 TFS only 
+set UPGRADE_FILE_RANGE_1	$UPGRADE_FILE_RANGE_2
+goto tftp_umon_bin
+
+# arg_apps:
+set UPGRADE_NAME			apps.jffs2
+set UPGRADE_START_SEC		$APPS_BANK0_ADDR
+set UPGRADE_FILE_RANGE_0	0
+set UPGRADE_FILE_RANGE_2	$APPS_BANK0_SIZE_NSECT
+goto tftp_jffs2_apps
+
+# arg_rootfs:
+set UPGRADE_NAME			rootfs.squashfs
+set UPGRADE_FLASHBANK		1
+set UPGRADE_START_SEC		0
+set UPGRADE_FILE_RANGE_0	0
+set UPGRADE_FILE_RANGE_2	0 # to detect
+goto tftp_other_files
+
+# arg_danapps:
+set UPGRADE_NAME			danapps.squashfs
+set UPGRADE_FLASHBANK		2
+set UPGRADE_START_SEC		0
+set UPGRADE_FILE_RANGE_0	0
+set UPGRADE_FILE_RANGE_2	0 # to detect
+goto tftp_other_files
+
+# arg_userdata:
+set UPGRADE_NAME			userdata.jffs2
+set UPGRADE_FLASHBANK		3
+set UPGRADE_START_SEC		$USER_BANK3_ADDR
+set UPGRADE_FILE_RANGE_0	0
+set UPGRADE_FILE_RANGE_2	$USER_BANK3_SIZE_NSECT
+goto tftp_other_files
+
+# arg_local:
+set UPGRADE_NAME			local.jffs2
+set UPGRADE_FLASHBANK		3
+set UPGRADE_START_SEC		$LOC_BANK3_ADDR
+set UPGRADE_FILE_RANGE_0	0
+set UPGRADE_FILE_RANGE_2	$LOC_BANK3_SIZE_NSECT
+goto tftp_other_files
+
+
+# tftp_umon_bin:
+if $UPGRADE_BACKUP_PARAMS eq 1 gosub ParamsBackup
+tftp $TFTP_SERVER_ADDR get $UMON_FILE $UMON_TMP_DOWNLOAD
+if $TFTPGET seq \$TFTPGET goto no_file_umon
+if $UPGRADE_BACKUP_PARAMS eq 1 gosub ParamsRestore
+set UPGRADE_ADDR $UMON_TMP_DOWNLOAD
+gosub UpgradeUmon
+echo PLEASE RESET!
+goto done_umon
+# no_file_umon:
+echo File $UMON_FILE is not found on $TFTP_SERVER_ADDR
+# done_umon:
+set UPGRADE_ARG cleanup
+exit -e upgrade
+
+
+# tftp_jffs2_apps:
+tftp $TFTP_SERVER_ADDR get $UPGRADE_NAME $JFFS2BASE
+if $TFTPGET seq \$TFTPGET goto no_file_jffs2
+gosub TftpBytes2Sectors
+set UPGRADE_FILE_RANGE_1  $TFTPGET_NSEC
+set UPGRADE_ADDR $JFFS2BASE
+gosub UpgradeUmon
+goto done_jffs2
+# no_file_jffs2:
+echo File $UPGRADE_NAME is not found on $TFTP_SERVER_ADDR
+# done_jffs2:
+set UPGRADE_ARG cleanup
+exit -e upgrade
+
+
+# tftp_other_files:
+tftp $TFTP_SERVER_ADDR get $UPGRADE_NAME $UMON_TMP_DOWNLOAD
+if $TFTPGET seq \$TFTPGET goto no_file
+gosub TftpBytes2Sectors
+set UPGRADE_FILE_RANGE_1	$TFTPGET_NSEC
+if $UPGRADE_FILE_RANGE_2 ne 0 goto skip_range2_set  
+set UPGRADE_FILE_RANGE_2	$TFTPGET_NSEC
+# skip_range2_set:
+set UPGRADE_ADDR 			$UMON_TMP_DOWNLOAD
+gosub UpgradeUmon
+goto done_file
+# no_file:
+echo File $UPGRADE_NAME is not found on $TFTP_SERVER_ADDR
+# done_file:
+set UPGRADE_ARG cleanup
+exit -e upgrade
+
+
+##########################################################################
+# Subroutine: UpgradeUmon
+# Burn uMon image into the flash. The image should be loaded into $UPGRADE_ADDR
+# Arguments:
+#   UPGRADE_NAME - for echo only
+#	UPGRADE_START_SEC - Start sector # to burn
+#	UPGRADE_ADDR - memory addr of loaded image 
+#   UPGRADE_FILE_RANGE_0..UPGRADE_FILE_RANGE_2 range to erase only
+#   UPGRADE_FILE_RANGE_0..UPGRADE_FILE_RANGE_1 range to erase & burn (UPGRADE_FILE_RANGE_2 >= UPGRADE_FILE_RANGE_1)
+# Notes:
+#	- We are using "spif" API for the Flash access (the "flash" API uasage is under comment, meanwhile).
+#	- First 64K from MEM_CB_RX is used for validation purpose
+# UpgradeUmon:
+
+#flash bank $UPGRADE_FLASHBANK
+spif_device $UPGRADE_FLASHBANK
+
+echo Programming $UPGRADE_NAME \c
+
+set isec		0
+set iaddr_dst	0
+set iaddr_src	$UPGRADE_ADDR
+
+# 1st loop: calc iaddr_dst = $UPGRADE_START_SEC * $FLASH_SECSIZE
+# LOOP0:
+if $isec ge $UPGRADE_START_SEC goto LOOP0_DONE
+set -i isec
+set -i -x iaddr_dst $FLASH_SECSIZE
+goto LOOP0
+# LOOP0_DONE:
+
+set isec 0
+# 2nd loop: erase/write sectors
+# WRITE_LOOP:
+if $isec ge $UPGRADE_FILE_RANGE_2 goto WRITE_LOOP_DONE
+#flash erase isec
+#flash write $iaddr_dst $iaddr_src $FLASH_SECSIZE
+if $isec lt $UPGRADE_FILE_RANGE_0 goto WRITE_LOOP_SKIP_WRITE_OPERATION
+spif berase $iaddr_dst $FLASH_SECSIZE_K
+if $isec ge $UPGRADE_FILE_RANGE_1 goto WRITE_LOOP_SKIP_WRITE_OPERATION
+gosub WriteAndVerifySpif
+# WRITE_LOOP_SKIP_WRITE_OPERATION:
+set -i isec
+set -i -x iaddr_dst $FLASH_SECSIZE
+set -i -x iaddr_src $FLASH_SECSIZE
+echo .\c
+goto WRITE_LOOP
+# WRITE_LOOP_DONE:
+
+echo
+set -d UPGRADE_FILE_RANGE_1
+set -d UPGRADE_FILE_RANGE_2
+set -i UPGRADE_FILE_RANGE_0 $UPGRADE_START_SEC
+set -i UPGRADE_FILE_RANGE_1 $UPGRADE_START_SEC
+set -i UPGRADE_FILE_RANGE_2 $UPGRADE_START_SEC
+echo $UPGRADE_FILE_RANGE_0..$UPGRADE_FILE_RANGE_2 "flash sectors erased Ok"
+echo $UPGRADE_FILE_RANGE_0..$UPGRADE_FILE_RANGE_1 "flash sectors written Ok"
+return
+
+
+##########################################################################
+# Subroutine: TftpBytes2Sectors
+# Calculate $TFTPGET_NSEC = ROUND_CEIL($TFTPGET / FLASH_SECSIZE)
+# TftpBytes2Sectors:
+set TFTPGET_NSEC 0
+set TFTPGET_TMP  0
+# loop_start:
+if $TFTPGET_TMP ge $TFTPGET return
+set -i TFTPGET_NSEC
+set -i TFTPGET_TMP $FLASH_SECSIZE
+goto loop_start
+
+
+##########################################################################
+# Subroutine: WriteAndVerifySpif
+# Call "spif write  $iaddr_dst $iaddr_src $FLASH_SECSIZE" 
+# and verify that the write succeeded
+# WriteAndVerifySpif:
+spif write  $iaddr_dst $iaddr_src $FLASH_SECSIZE
+spif read   $iaddr_dst $MEM_CB_RX $FLASH_SECSIZE
+-cm -v -4 $iaddr_src $MEM_CB_RX $FLASH_SECSIZE
+if $CMDSTAT seq PASS return
+echo Trying 'spif write $iaddr_dst $iaddr_src' once more
+goto WriteAndVerifySpif
+
+
+########################################################
+# Subroutine: PutFile2Tmp
+# Copy $TmpFile from TFS -> //tmp/
+# PutFile2Tmp:
+set this_size
+tfs size $TmpFile this_size
+if $this_size seq \$this_size return	# file TmpFile doesn't exist
+tfs cp $TmpFile //tmp/$TmpFile
+return
+
+########################################################
+# Subroutine: GetFileFromTmp
+# Copy $TmpFile from TFS -> //tmp/
+# GetFileFromTmp:
+set this_size
+tfs size //tmp/$TmpFile this_size
+if $this_size seq \$this_size return	# file TmpFile doesn't exist
+tfs cp //tmp/$TmpFile $TmpFile
+return
+
+
+##########################################################################
+# Subroutine: ParamsBackup
+# Save params & network files on a temorary RAM drive 
+# (to be restored after TFS upgrade)
+# ParamsBackup:
+echo Backup params & network files...
+set TmpFile params
+gosub PutFile2Tmp
+set TmpFile network
+gosub PutFile2Tmp
+return
+
+
+##########################################################################
+# Subroutine: ParamsRestore
+# ParamsRestore:
+echo Restore params & network files...
+# New uMON image should be placed already in $UMON_TMP_DOWNLOAD; now new 
+# TFS sectors content must be copied to uMON's TFS-mirroring (before "tfs cp" operation)
+# The $TFS_ADDR is also offset from uMON start, because uMON image starts from 0-address
+set TFS_ADDR_DOWNLOADED $UMON_TMP_DOWNLOAD
+set -i -x TFS_ADDR_DOWNLOADED $UMON_FILE_TFS_OFFS
+cm -4 $TFS_ADDR_DOWNLOADED $TFS_ADDR $TFS_SIZE
+#tfs ls
+set TmpFile network
+gosub GetFileFromTmp
+set TmpFile params
+gosub GetFileFromTmp
+cm -4 $TFS_ADDR $TFS_ADDR_DOWNLOADED $TFS_SIZE
+return

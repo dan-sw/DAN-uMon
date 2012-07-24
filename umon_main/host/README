@@ -1,0 +1,42 @@
+The MicroMonitor source code distribution is configured to build
+with the GNU native and cross-development tools.  In addition to those
+tools, the makefiles under the MicroMonitor tree use a few other tools
+all of which are either custom and are built under this source tree or
+are publically available (i.e. cscope & ctags).
+
+This directory contains the source code for the custom host-based tools
+used with a MicroMonitor environment.  The majority of these tools can
+be built with GNU tools or Visual C++ (VCC).
+
+These tools have been successfully built on CYGWIN (using both GNU and VCC),
+plus SOLARIS (SunOS 5.7) LINUX (RedHat-9 & others), and MacOS (using BASH
+and GCC).
+
+To do a complete build and cleanup using native GNU gcc run:
+
+	"make OSTYPE=cygwin rebuild"
+or
+	"make OSTYPE=linux rebuild"
+or
+	"make OSTYPE=solaris rebuild"
+or
+	"make OSTYPE=macos rebuild"
+
+depending on your host system.  To do a complete build and cleanup
+for Cygwin using Visual C++ first make sure your environment is set
+up to handle this.  Refer to the vcc_setup script under src/scripts.
+Then run:
+
+	"make OSTYPE=cygwin VCC=TRUE rebuild"
+
+Note1: In all cases, the 'make' tool is assumed to be GNU.
+Note2: The OSTYPE variable is usually established already in your
+  environment; however, I've found that in some cases it isn't or it
+  is but it isn't exported.  Adding this to the command line just
+  guarantees that it is set properly for use by the make files.
+Note3: Make sure your PATH is set up with the Cygwin tools in front.
+  One common error on Cygwin is that 'find' is taken from Microsoft
+  instead of /cygwin/bin.  This will cause this build to mess up.
+Note4: The 'install' rule simply copies the executables to host/bin.
+  If you prefer that they be installed elsewhere, then add BIN=dirname
+  to the make line.

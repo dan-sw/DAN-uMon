@@ -1,0 +1,10 @@
+PS1=BOARD_NAME:
+export EDITOR=vi
+export TITLE="BOARD_NAME Monitor Development"
+if [ "$UMONTOP" == "" ]
+then
+	export UMONTOP=../../umon_main
+fi
+export HOME=`pwd`
+unset TERM
+. $UMONTOP/host/bin/umon_setup

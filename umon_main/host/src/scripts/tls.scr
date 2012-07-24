@@ -1,0 +1,27 @@
+#!/bin/bash
+# 
+# tls:
+# Target 'ls'...
+# 
+usage()
+{
+	echo "Usage: tls [target ip address]"
+	echo "(uses \$TARGET_IP if set)"
+}
+
+if [ $# == 0 ]
+then
+	if [ "$TARGET_IP" = "" ] 
+	then
+		usage
+		exit 1
+	fi
+elif [ $# != 1 ]
+then
+	usage
+	exit 1
+else
+	export TARGET_IP=$1
+fi
+
+moncmd $TARGET_IP "tfs ls *"

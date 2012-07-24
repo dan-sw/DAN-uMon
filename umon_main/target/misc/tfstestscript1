@@ -1,0 +1,166 @@
+#
+# tfstest:
+# This script can be run on-board a target system to test TFS.
+# It assumes the monitor has been built with the DEFRAG_TEST_ENABLED flag
+# set to 1. It builds an arbitrary list of arbitrarily sized files
+# and then runs "tfs clean EXITPOINT EXITSECTOR" for all valid instances
+# of EXITPOINT and EXITSECTOR.
+# EXITPOINT and EXITSECTOR are values passed into tfs clean that tell it
+# to simulate the siutation that would occur if the target was reset in
+# the middle of a defragmentation.  EXITPOINT is a location in the tfsclean()
+# function and EXITSECTOR is the sector number.  Some of the EXITPOINT values
+# do not correspond to a sector, so there are three ranges of POINT/SECTOR
+# values that must be run...
+#
+#	1. The initial exit points prior to a sector association.
+#	2. The exit points that are per-sector.
+#	3. The final exit points after sector association is complete.
+#
+# Note that since this is being run out of TFS, the added complexity of the
+# fact that defragmentation will occur on an opened file will be dealt with.
+#
+argv -v
+set TOT 0
+set CHECKFAILURES 0
+set TFSDEV //BBRAM/
+tfs -d $TFSDEV init
+set SCR_EXITONCLEANERROR 1
+
+# Establish 6 file sizes to be used later...
+set FSIZE1 140
+set FSIZE2 508
+set FSIZE3 90
+set FSIZE4 18
+set FSIZE5 849
+set FSIZE6 11
+
+# Establish EXITPOINT ranges:
+# From EXITPOINT thru EXITPOINT_LOWEND we run tfs clean with exit sector 
+# set to 0.
+# From EXITPOINT_LOWEND+1 thru EXITPOINT_MIDEND we run tfs clean with
+# exit sector running through the range specified below.
+# From EXITPOINT_MIDEND+1 thru EXITPOINT_HIEND we run tfs clean with with
+# exit sector once again set to 0.
+#
+set EXITPOINT 1
+set EXITPOINT_LOWEND 4
+set EXITPOINT_MIDEND 34
+set EXITPOINT_HIEND 37
+
+# Establish EXITSECTOR range:
+set EXITSECTOR 46
+set EXITSECTOR_LAST 51
+
+############################################################################
+#
+# MAIN:
+# This is the top of the first of three loops.  In LOOP1 we run the
+# tfs clean calls for the initial set of exit points that do not have
+# an associated sector number.  The second loop is to run the clean calls
+# on each exit point for each sector number.  The third loop runs through
+# the final exit points that once again do not have an associated sector
+# number.
+#
+echo Starting LOOP1...
+
+# LOOP1:
+# This loop does the initial set of exit points, with exit sector set to 0
+#
+if $EXITPOINT gt $EXITPOINT_LOWEND goto TOP_LOOP2
+gosub MAKEFILES
+tfs -d $TFSDEV clean $EXITPOINT 0
+gosub TESTTOT
+tfs -vvvd $TFSDEV fix
+gosub CHECKFILES
+let EXITPOINT=$EXITPOINT+1
+goto LOOP1
+
+# TOP_LOOP2:
+echo Starting LOOP2...
+
+# LOOP2:
+# This loop does the mid-range set of exit points, for each sector within
+# the specified range.
+#
+if $EXITSECTOR gt $EXITSECTOR_LAST goto TOP_LOOP3
+gosub MAKEFILES
+tfs -d $TFSDEV clean $EXITPOINT $EXITSECTOR
+gosub TESTTOT
+tfs -vvvd $TFSDEV fix
+gosub CHECKFILES
+let EXITPOINT=$EXITPOINT+1
+if $EXITPOINT le $EXITPOINT_MIDEND goto LOOP2
+let EXITPOINT=$EXITPOINT_LOWEND+1
+let EXITSECTOR=$EXITSECTOR+1
+goto LOOP2
+
+
+# TOP_LOOP3:
+echo Starting LOOP3...
+let EXITPOINT=$EXITPOINT_MIDEND+1
+
+# LOOP3:
+# This loop does the final set of non-sector associated exit points.
+#
+if $EXITPOINT gt $EXITPOINT_HIEND goto DONE
+gosub MAKEFILES
+tfs -d $TFSDEV clean $EXITPOINT 0
+gosub TESTTOT
+tfs -vvvd $TFSDEV fix
+gosub CHECKFILES
+let EXITPOINT=$EXITPOINT+1
+goto LOOP3
+
+# DONE:
+echo Test completed, ran a total of $TOT defragmentation tests.
+exit
+
+
+############################################################################
+#
+# MAKEFILES:
+# Create a set of files (some of which are deleted) for tfs clean to 
+# work on...
+#
+tfs -d $TFSDEV init
+tfs add ${TFSDEV}f1 $APPRAMBASE $FSIZE1
+tfs add ${TFSDEV}f2 $APPRAMBASE $FSIZE2
+tfs add ${TFSDEV}f3 $APPRAMBASE $FSIZE3
+tfs add ${TFSDEV}f4 $APPRAMBASE $FSIZE4
+tfs add ${TFSDEV}f5 $APPRAMBASE $FSIZE5
+tfs add ${TFSDEV}f6 $APPRAMBASE $FSIZE6
+tfs rm ${TFSDEV}f2
+return
+
+############################################################################
+#
+# CHECKFILES:
+# Verify that the expected files exist...
+#
+tfs -xd $TFSDEV check
+tfs size ${TFSDEV}f1 SIZE
+if $SIZE ne $FSIZE1 goto CHECKFILEFAIL
+tfs size ${TFSDEV}f3 SIZE
+if $SIZE ne $FSIZE3 goto CHECKFILEFAIL
+tfs size ${TFSDEV}f4 SIZE
+if $SIZE ne $FSIZE4 goto CHECKFILEFAIL
+tfs size ${TFSDEV}f5 SIZE
+if $SIZE ne $FSIZE5 goto CHECKFILEFAIL
+tfs size ${TFSDEV}f6 SIZE
+if $SIZE ne $FSIZE6 goto CHECKFILEFAIL
+return
+
+# CHECKFILEFAIL:
+echo CHECKFILES failed after clean no: $TOT
+exit
+
+############################################################################
+# 
+# TESTTOT:
+# Increment number of tfs cleans that have been executed; and, if an
+# argument is on the command line, then check for an exit point.
+#
+let TOT=$TOT+1
+if $ARGC ne 2 return
+if $TOT eq $ARG1 exit
+return

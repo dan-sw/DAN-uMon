@@ -1,0 +1,350 @@
+api_lib.o: lwip/src/api/api_lib.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h
+api_msg.o: lwip/src/api/api_msg.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h
+err.o: lwip/src/api/err.c lwip/src/include/lwip/err.h \
+  lwip/src/include/lwip/opt.h lwipopts.h lwip/src/include/lwip/debug.h \
+  lwip/src/include/lwip/arch.h arch/cc.h monlib.h tfs.h cli.h
+netbuf.o: lwip/src/api/netbuf.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h
+netdb.o: lwip/src/api/netdb.c lwip/src/include/lwip/netdb.h \
+  lwip/src/include/lwip/opt.h lwipopts.h lwip/src/include/lwip/debug.h \
+  lwip/src/include/lwip/arch.h arch/cc.h monlib.h tfs.h cli.h
+netifapi.o: lwip/src/api/netifapi.c lwip/src/include/lwip/opt.h \
+  lwipopts.h lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h \
+  arch/cc.h monlib.h tfs.h cli.h
+dhcp.o: lwip/src/core/dhcp.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h
+dns.o: lwip/src/core/dns.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h
+init.o: lwip/src/core/init.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h lwip/src/include/lwip/init.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/lwip/stats.h \
+  lwip/src/include/lwip/mem.h lwip/src/include/lwip/memp.h \
+  lwip/src/include/lwip/memp_std.h lwip/src/include/lwip/sys.h \
+  lwip/src/include/lwip/mem.h lwip/src/include/lwip/memp.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/lwip/err.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/lwip/sockets.h lwip/src/include/ipv4/lwip/ip.h \
+  lwip/src/include/lwip/def.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/lwip/err.h lwip/src/include/lwip/raw.h \
+  lwip/src/include/ipv4/lwip/ip.h lwip/src/include/lwip/udp.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/lwip/tcp.h \
+  lwip/src/include/lwip/sys.h lwip/src/include/ipv4/lwip/icmp.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/ipv4/lwip/autoip.h \
+  lwip/src/include/ipv4/lwip/igmp.h lwip/src/include/lwip/dns.h \
+  lwip/src/include/netif/etharp.h lwip/src/include/lwip/opt.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/ipv4/lwip/ip.h
+mem.o: lwip/src/core/mem.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h lwip/src/include/lwip/def.h \
+  lwip/src/include/lwip/mem.h lwip/src/include/lwip/opt.h \
+  lwip/src/include/lwip/sys.h lwip/src/include/lwip/stats.h \
+  lwip/src/include/lwip/mem.h lwip/src/include/lwip/memp.h \
+  lwip/src/include/lwip/memp_std.h
+memp.o: lwip/src/core/memp.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h lwip/src/include/lwip/memp.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/lwip/memp_std.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/lwip/err.h \
+  lwip/src/include/lwip/udp.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/ipv4/lwip/ip.h \
+  lwip/src/include/lwip/def.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/lwip/err.h lwip/src/include/lwip/raw.h \
+  lwip/src/include/lwip/tcp.h lwip/src/include/lwip/sys.h \
+  lwip/src/include/lwip/mem.h lwip/src/include/ipv4/lwip/icmp.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/ipv4/lwip/igmp.h \
+  lwip/src/include/lwip/api.h lwip/src/include/lwip/api_msg.h \
+  lwip/src/include/lwip/tcpip.h lwip/src/include/lwip/sys.h \
+  lwip/src/include/lwip/stats.h lwip/src/include/lwip/memp.h \
+  lwip/src/include/netif/etharp.h lwip/src/include/lwip/opt.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/ipv4/lwip/ip.h \
+  lwip/src/include/ipv4/lwip/ip_frag.h lwip/src/include/ipv4/lwip/ip.h \
+  lwip/src/include/lwip/memp_std.h
+netif.o: lwip/src/core/netif.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h lwip/src/include/lwip/def.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/lwip/opt.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/lwip/opt.h \
+  lwip/src/include/lwip/err.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/ipv4/lwip/inet.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/lwip/tcp.h \
+  lwip/src/include/lwip/sys.h lwip/src/include/lwip/mem.h \
+  lwip/src/include/ipv4/lwip/ip.h lwip/src/include/lwip/def.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/lwip/err.h \
+  lwip/src/include/ipv4/lwip/icmp.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/lwip/snmp.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/lwip/udp.h lwip/src/include/ipv4/lwip/igmp.h \
+  lwip/src/include/netif/etharp.h lwip/src/include/lwip/opt.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/ipv4/lwip/ip.h
+pbuf.o: lwip/src/core/pbuf.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h lwip/src/include/lwip/stats.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/lwip/mem.h \
+  lwip/src/include/lwip/memp.h lwip/src/include/lwip/memp_std.h \
+  lwip/src/include/lwip/def.h lwip/src/include/lwip/mem.h \
+  lwip/src/include/lwip/memp.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/lwip/err.h lwip/src/include/lwip/sys.h arch/perf.h
+raw.o: lwip/src/core/raw.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h lwip/src/include/lwip/def.h \
+  lwip/src/include/lwip/memp.h lwip/src/include/lwip/opt.h \
+  lwip/src/include/lwip/memp_std.h lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/lwip/err.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/ipv4/lwip/inet.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/lwip/raw.h lwip/src/include/ipv4/lwip/ip.h \
+  lwip/src/include/lwip/def.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/lwip/err.h lwip/src/include/lwip/stats.h \
+  lwip/src/include/lwip/mem.h lwip/src/include/lwip/memp.h \
+  lwip/src/include/lwip/snmp.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/lwip/udp.h arch/perf.h
+stats.o: lwip/src/core/stats.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h lwip/src/include/lwip/def.h \
+  lwip/src/include/lwip/stats.h lwip/src/include/lwip/opt.h \
+  lwip/src/include/lwip/mem.h lwip/src/include/lwip/memp.h \
+  lwip/src/include/lwip/memp_std.h lwip/src/include/lwip/mem.h
+sys.o: lwip/src/core/sys.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h
+tcp.o: lwip/src/core/tcp.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h lwip/src/include/lwip/def.h \
+  lwip/src/include/lwip/mem.h lwip/src/include/lwip/opt.h \
+  lwip/src/include/lwip/memp.h lwip/src/include/lwip/memp_std.h \
+  lwip/src/include/lwip/snmp.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/lwip/err.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/lwip/udp.h lwip/src/include/ipv4/lwip/ip.h \
+  lwip/src/include/lwip/def.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/lwip/err.h lwip/src/include/lwip/tcp.h \
+  lwip/src/include/lwip/sys.h lwip/src/include/lwip/mem.h \
+  lwip/src/include/ipv4/lwip/icmp.h lwip/src/include/lwip/netif.h
+tcp_in.o: lwip/src/core/tcp_in.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h lwip/src/include/lwip/tcp.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/lwip/sys.h \
+  lwip/src/include/lwip/mem.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/lwip/err.h lwip/src/include/ipv4/lwip/ip.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/lwip/def.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/lwip/err.h lwip/src/include/ipv4/lwip/icmp.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/ipv4/lwip/inet.h lwip/src/include/lwip/def.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/lwip/mem.h lwip/src/include/lwip/memp.h \
+  lwip/src/include/lwip/memp_std.h lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/ipv4/lwip/inet_chksum.h lwip/src/include/lwip/stats.h \
+  lwip/src/include/lwip/memp.h lwip/src/include/lwip/snmp.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/lwip/udp.h arch/perf.h
+tcp_out.o: lwip/src/core/tcp_out.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h lwip/src/include/lwip/tcp.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/lwip/sys.h \
+  lwip/src/include/lwip/mem.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/lwip/err.h lwip/src/include/ipv4/lwip/ip.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/lwip/def.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/lwip/err.h lwip/src/include/ipv4/lwip/icmp.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/ipv4/lwip/inet.h lwip/src/include/lwip/def.h \
+  lwip/src/include/lwip/mem.h lwip/src/include/lwip/memp.h \
+  lwip/src/include/lwip/memp_std.h lwip/src/include/lwip/sys.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/ipv4/lwip/inet_chksum.h lwip/src/include/lwip/stats.h \
+  lwip/src/include/lwip/memp.h lwip/src/include/lwip/snmp.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/lwip/udp.h
+udp.o: lwip/src/core/udp.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h lwip/src/include/lwip/udp.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/lwip/err.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/lwip/opt.h \
+  lwip/src/include/ipv4/lwip/inet.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/ipv4/lwip/ip.h lwip/src/include/lwip/def.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/lwip/err.h \
+  lwip/src/include/lwip/def.h lwip/src/include/lwip/memp.h \
+  lwip/src/include/lwip/memp_std.h lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/ipv4/lwip/inet_chksum.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/ipv4/lwip/icmp.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/lwip/stats.h lwip/src/include/lwip/mem.h \
+  lwip/src/include/lwip/memp.h lwip/src/include/lwip/snmp.h \
+  lwip/src/include/lwip/udp.h arch/perf.h lwip/src/include/lwip/dhcp.h
+autoip.o: lwip/src/core/ipv4/autoip.c lwip/src/include/lwip/opt.h \
+  lwipopts.h lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h \
+  arch/cc.h monlib.h tfs.h cli.h
+icmp.o: lwip/src/core/ipv4/icmp.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h lwip/src/include/ipv4/lwip/icmp.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/lwip/err.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/ipv4/lwip/inet_chksum.h \
+  lwip/src/include/ipv4/lwip/ip.h lwip/src/include/lwip/def.h \
+  lwip/src/include/lwip/err.h lwip/src/include/lwip/def.h \
+  lwip/src/include/lwip/stats.h lwip/src/include/lwip/mem.h \
+  lwip/src/include/lwip/memp.h lwip/src/include/lwip/memp_std.h \
+  lwip/src/include/lwip/snmp.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/lwip/udp.h lwip/src/include/ipv4/lwip/ip.h
+igmp.o: lwip/src/core/ipv4/igmp.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h
+inet.o: lwip/src/core/ipv4/inet.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/ipv4/lwip/ip_addr.h
+inet_chksum.o: lwip/src/core/ipv4/inet_chksum.c \
+  lwip/src/include/lwip/opt.h lwipopts.h lwip/src/include/lwip/debug.h \
+  lwip/src/include/lwip/arch.h arch/cc.h monlib.h tfs.h cli.h \
+  lwip/src/include/ipv4/lwip/inet_chksum.h lwip/src/include/lwip/opt.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/lwip/opt.h \
+  lwip/src/include/lwip/err.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/ipv4/lwip/inet.h
+ip.o: lwip/src/core/ipv4/ip.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h lwip/src/include/ipv4/lwip/ip.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/lwip/def.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/lwip/opt.h \
+  lwip/src/include/lwip/err.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/lwip/err.h lwip/src/include/lwip/def.h \
+  lwip/src/include/lwip/mem.h lwip/src/include/ipv4/lwip/ip_frag.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/ipv4/lwip/inet.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/ipv4/lwip/ip.h lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/ipv4/lwip/inet_chksum.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/ipv4/lwip/icmp.h lwip/src/include/ipv4/lwip/igmp.h \
+  lwip/src/include/lwip/raw.h lwip/src/include/ipv4/lwip/ip.h \
+  lwip/src/include/lwip/udp.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/lwip/tcp.h lwip/src/include/lwip/sys.h \
+  lwip/src/include/lwip/mem.h lwip/src/include/ipv4/lwip/icmp.h \
+  lwip/src/include/lwip/snmp.h lwip/src/include/lwip/udp.h \
+  lwip/src/include/lwip/dhcp.h lwip/src/include/lwip/stats.h \
+  lwip/src/include/lwip/memp.h lwip/src/include/lwip/memp_std.h \
+  arch/perf.h
+ip_addr.o: lwip/src/core/ipv4/ip_addr.c lwip/src/include/lwip/opt.h \
+  lwipopts.h lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h \
+  arch/cc.h monlib.h tfs.h cli.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/lwip/err.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/lwip/pbuf.h
+ip_frag.o: lwip/src/core/ipv4/ip_frag.c lwip/src/include/lwip/opt.h \
+  lwipopts.h lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h \
+  arch/cc.h monlib.h tfs.h cli.h lwip/src/include/ipv4/lwip/ip_frag.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/lwip/err.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/lwip/err.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/ipv4/lwip/ip.h lwip/src/include/lwip/def.h \
+  lwip/src/include/ipv4/lwip/ip.h lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/ipv4/lwip/inet_chksum.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/lwip/snmp.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/lwip/udp.h lwip/src/include/ipv4/lwip/ip.h \
+  lwip/src/include/lwip/stats.h lwip/src/include/lwip/mem.h \
+  lwip/src/include/lwip/memp.h lwip/src/include/lwip/memp_std.h \
+  lwip/src/include/ipv4/lwip/icmp.h
+etharp.o: lwip/src/netif/etharp.c lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h tfs.h cli.h lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/ipv4/lwip/ip.h lwip/src/include/lwip/def.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/lwip/opt.h \
+  lwip/src/include/lwip/err.h lwip/src/include/lwip/err.h \
+  lwip/src/include/lwip/stats.h lwip/src/include/lwip/mem.h \
+  lwip/src/include/lwip/memp.h lwip/src/include/lwip/memp_std.h \
+  lwip/src/include/lwip/snmp.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/lwip/udp.h \
+  lwip/src/include/ipv4/lwip/ip.h lwip/src/include/lwip/dhcp.h \
+  lwip/src/include/ipv4/lwip/autoip.h lwip/src/include/netif/etharp.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/ipv4/lwip/ip.h
+fs.o: net/fs.c lwip/src/include/lwip/def.h lwip/src/include/lwip/arch.h \
+  arch/cc.h monlib.h tfs.h cli.h net/fs.h monlib.h tfs.h
+httpd.o: net/httpd.c lwip/src/include/lwip/debug.h \
+  lwip/src/include/lwip/arch.h arch/cc.h monlib.h tfs.h cli.h \
+  lwip/src/include/lwip/stats.h lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/mem.h \
+  lwip/src/include/lwip/memp.h lwip/src/include/lwip/memp_std.h \
+  net/httpd.h lwip/src/include/lwip/tcp.h lwip/src/include/lwip/sys.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/lwip/err.h \
+  lwip/src/include/ipv4/lwip/ip.h lwip/src/include/lwip/opt.h \
+  lwip/src/include/lwip/def.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/lwip/err.h \
+  lwip/src/include/ipv4/lwip/icmp.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/ipv4/lwip/inet.h \
+  net/fs.h monlib.h
+monsrvr.o: net/monsrvr.c lwip/src/include/lwip/udp.h \
+  lwip/src/include/lwip/opt.h lwipopts.h lwip/src/include/lwip/debug.h \
+  lwip/src/include/lwip/arch.h arch/cc.h monlib.h tfs.h cli.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/lwip/err.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/lwip/opt.h lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/ipv4/lwip/ip.h \
+  lwip/src/include/lwip/def.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/lwip/err.h lwip/src/include/lwip/pbuf.h monlib.h
+umonlwip.o: net/umonlwip.c monlib.h tfs.h cli.h tfs.h cfg.h \
+  lwip/src/include/lwip/mem.h lwip/src/include/lwip/opt.h lwipopts.h \
+  lwip/src/include/lwip/debug.h lwip/src/include/lwip/arch.h arch/cc.h \
+  monlib.h lwip/src/include/lwip/memp.h lwip/src/include/lwip/memp_std.h \
+  lwip/src/include/netif/etharp.h lwip/src/include/lwip/opt.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/lwip/err.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/lwip/opt.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/ipv4/lwip/inet.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/ipv4/lwip/ip.h \
+  lwip/src/include/lwip/def.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/lwip/err.h lwip/src/include/lwip/init.h \
+  lwip/src/include/ipv4/lwip/ip.h lwip/src/include/lwip/udp.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/ipv4/lwip/ip.h \
+  lwip/src/include/lwip/tcp.h lwip/src/include/lwip/sys.h \
+  lwip/src/include/lwip/mem.h lwip/src/include/ipv4/lwip/icmp.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/lwip/tcpip.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/lwip/stats.h lwip/src/include/lwip/memp.h \
+  net/umonlwip.h
+crt0_bfin.o: crt0_bfin.S cfg.h
+main.o: main.c monlib.h tfs.h cli.h cfg.h lwip/src/include/lwip/mem.h \
+  lwip/src/include/lwip/opt.h lwipopts.h lwip/src/include/lwip/debug.h \
+  lwip/src/include/lwip/arch.h arch/cc.h monlib.h \
+  lwip/src/include/lwip/memp.h lwip/src/include/lwip/memp_std.h \
+  lwip/src/include/netif/etharp.h lwip/src/include/lwip/opt.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/lwip/err.h \
+  lwip/src/include/ipv4/lwip/ip_addr.h lwip/src/include/lwip/opt.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/ipv4/lwip/inet.h lwip/src/include/ipv4/lwip/ip_addr.h \
+  lwip/src/include/lwip/pbuf.h lwip/src/include/ipv4/lwip/ip.h \
+  lwip/src/include/lwip/def.h lwip/src/include/lwip/pbuf.h \
+  lwip/src/include/lwip/err.h lwip/src/include/lwip/init.h \
+  lwip/src/include/ipv4/lwip/ip.h lwip/src/include/lwip/udp.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/ipv4/lwip/ip.h \
+  lwip/src/include/lwip/tcp.h lwip/src/include/lwip/sys.h \
+  lwip/src/include/lwip/mem.h lwip/src/include/ipv4/lwip/icmp.h \
+  lwip/src/include/lwip/netif.h lwip/src/include/ipv4/lwip/inet.h \
+  lwip/src/include/lwip/tcpip.h lwip/src/include/lwip/netif.h \
+  lwip/src/include/lwip/stats.h lwip/src/include/lwip/memp.h net/httpd.h \
+  net/monsrvr.h net/umonlwip.h
+monlib.o: monlib.c monlib.h tfs.h cli.h

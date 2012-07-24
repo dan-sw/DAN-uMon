@@ -1,0 +1,4 @@
+// This file should present but may be empty
+#define FLASHRAM_BASE FLASH3400_RAM_BASE
+#define SPIF_TFS_BASE 0
+#define SPIF_TFS_SIZE (FLASH3400_NUMSECTORS * FLASH3400_SECTORSIZE)

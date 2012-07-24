@@ -1,0 +1,217 @@
+#
+# tfstest:
+# This script can be run on-board a target system to test TFS.
+# It builds arbitrary sized files constantly.  Causing defrag to be run
+# fairly often.
+#
+# It is not generic, but is kept here as an example.  It assumes the 
+# //BBRAM/ file storage device exists.  It will use the data starting at
+# $APPRAMBASE to build the file sizes and names.
+#
+# If an argument is specified, that argument is assumed to be a breakpoint...
+# When that number of file adds have been executed, the script stops.
+#
+# Note that after each iteration of the MAINLOOP below, if a character
+# is typed on the console, this loop is aborted.
+# Also, if the shell variable ECHOTOT is set (externally), then after each
+# iteration, the tfs-add count will be printed.
+#
+argv -v
+tfs -d //BBRAM/ init
+set APP_EXITONCLEANERROR 1
+
+# Initialize static variables:
+set SIZEMAX	1000
+set SIZEMSK 0xfff
+gosub TMPSIZEINIT
+set SIZELOC $APPRAMBASE
+
+# Initialize dynamic variables:
+set MAX 0
+set TOT 0
+set MIN $SIZEMAX
+
+
+############################################################################
+#
+# This is the main loop.  Look to memory for a file size, but limit the
+# size to be less than 512 bytes.  If the value retrieved from memory will
+# create a size of zero, then the subroutine SIZECHECK will change this.
+#
+# MAINLOOP:
+gosub GETSIZE			# Retrieve a file size
+gosub GETNAME			# Retrieve a file name
+gosub TESTTOT			# Increment tfs add total, and check for exitpoint
+gosub ADDFILE			# Add file to TFS and check sanity
+gosub USERQUERY			# Check for user query at console
+goto MAINLOOP			# Repeat
+
+#
+# The remaining subroutines are used by the above loop.
+#
+
+############################################################################
+#
+# GETSIZE:
+# Using the content of the shellvar SIZELOC as the address, read a short
+# from memory and place that value into SIZE.  Increment SIZELOC, then deal
+# with the case where the size loaded from memory may be zero or greater
+# than the content of $SIZEMAX.
+#
+dm -2v SIZE $SIZELOC 1
+let SIZELOC=hex($SIZELOC+2)
+let SIZE=${SIZE}&${SIZEMSK}
+if $SIZE eq 0 goto FIXSIZE
+if $SIZE gt $SIZEMAX goto FIXSIZE
+gosub SIZELOG
+return
+
+# FIXSIZE:
+# The variable TMPSIZE is incremented and used in place of the
+# out-of-range size.
+# 
+set SIZE $TMPSIZE
+let TMPSIZE=$TMPSIZE+1
+gosub SIZELOG
+if $TMPSIZE lt $SIZEMAX return
+gosub TMPSIZEINIT
+return
+
+############################################################################
+#
+# TMPSIZEINIT:
+# Called to [re]initialize TMPSIZE.
+#
+set TMPSIZE 10
+return
+
+############################################################################
+#
+# SIZELOG:
+# Keep track of min and max file sizes used...
+#
+if $SIZE lt $MIN gosub NEWMIN
+if $SIZE gt $MAX gosub NEWMAX
+return
+
+# NEWMIN:
+set MIN $SIZE
+return
+
+# NEWMAX:
+set MAX $SIZE
+return
+
+############################################################################
+#
+# GETNAME:
+# Based on the size of the file, use some file name...
+# This allows both the size and filename to be somewhat random based on
+# the content of memory starting at $APPRAMBASE.
+if $SIZE lt 100 goto NAME1 
+if $SIZE lt 200 goto NAME2 
+if $SIZE lt 300 goto NAME3 
+if $SIZE lt 400 goto NAME4 
+if $SIZE lt 500 goto NAME5 
+if $SIZE lt 600 goto NAME6 
+if $SIZE lt 700 goto NAME7 
+if $SIZE lt 800 goto NAME8 
+if $SIZE lt 900 goto NAME9 
+set NAME //BBRAM/f10
+return
+
+# NAME1:
+set NAME //BBRAM/f1
+return
+# NAME2:
+set NAME //BBRAM/f2
+return
+# NAME3:
+set NAME //BBRAM/f3
+return
+# NAME4:
+set NAME //BBRAM/f4
+return
+# NAME5:
+set NAME //BBRAM/f5
+return
+# NAME6:
+set NAME //BBRAM/f6
+return
+# NAME7:
+set NAME //BBRAM/f7
+return
+# NAME8:
+set NAME //BBRAM/f8
+return
+# NAME9:
+set NAME //BBRAM/f9
+return
+
+
+############################################################################
+#
+# ADDFILE:
+# Add a file to TFS, then run a check of the files in TFS.
+# If pass, return; if fail, run the check in verbose mode and exit.
+#
+tfs -d //BBRAM/ freemem FREESPACE
+let RMSIZE=$SIZE
+if $FREESPACE gt $RMSIZE goto ADDFILEMORE
+tfs -v -d //BBRAM/ rms $RMSIZE //BBRAM/testfile1 //BBRAM/testfile2
+
+# ADDFILEMORE:
+if $ECHOTOT seq \$ECHOTOT goto SKIPECHO
+echo $TOT: $NAME ($SIZE)
+# SKIPECHO:
+tfs add $NAME $APPRAMBASE $SIZE
+tfs -d //BBRAM/ check TFSSTATE
+if $TFSSTATE seq PASS return
+tfs check
+exit
+
+############################################################################
+#
+# TESTTOT:
+# Increment number of tfs adds that have been executed; and, if an argument
+# is on the command line, then check for an exit point.
+#
+let TOT=$TOT+1
+if $ARGC ne 2 return
+if $TOT eq $ARG1 exit
+return
+
+############################################################################
+#
+# USERQUERY:
+# If no character has been hit at the console just return.
+# If a character has been typed, then wait for a read to complete and
+# process the incoming query...
+#
+if -t ngc return
+echo Hit return...
+read QUERY
+if $QUERY seq s goto SHOWSTATE
+if $QUERY seq l goto SHOWFILES
+if $QUERY seq q exit
+echo Enter...
+echo 's' to show state
+echo 'l' to list //BBRAM files
+echo 'q' to quit 
+goto RETURN_TO_CONTINUE
+
+# SHOWFILES:
+tfs ls //BBRAM/*
+goto RETURN_TO_CONTINUE
+
+# SHOWSTATE:
+echo TOTAL 'tfs add' calls:   $TOT
+echo Minimum file size added: $MIN
+echo Maximum file size added: $MAX
+goto RETURN_TO_CONTINUE
+
+# RETURN_TO_CONTINUE:
+echo Hit return to continue...
+read QUERY
+return
+

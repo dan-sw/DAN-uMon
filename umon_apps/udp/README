@@ -1,0 +1,11 @@
+This directory contains source and makefile to build a small
+uMon-standalone application that demonstrates the use of uMon's
+ethernet packet interface as the basis for simple UDP communications.
+
+This is code that is taken directly from uMon source, only here it is
+modified to use the monitor's API functions.  This code should be 100%
+independent of the target; hence, provides an immediate mechanism for a
+board running uMon to have a basic application using UDP.
+
+Refer to makefile for details on how to build for various CPU architectures
+and target configurations.

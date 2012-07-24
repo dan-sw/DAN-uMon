@@ -1,0 +1,40 @@
+TARGETOS=WINNT
+AOUT=newmon.exe
+BIN=C:/bin
+
+OBJS= newmon.obj ttftp.obj moncmd.obj getopt.obj
+
+!include <ntwin32.mak>
+
+$(AOUT):	$(OBJS) makefile
+	$(link) $(conflags) -out:$(AOUT) $(OBJS) wsock32.lib $(conlibs)
+	
+getopt.obj:	../moncmd/getopt.c 
+	$(cc) -I. $(cflags) $(cvars) ../moncmd/getopt.c
+
+ttftp.obj:	../ttftp/ttftp.c ../ttftp/ttftp.h
+	$(cc) -I. -I../moncmd -I../ttftp $(cflags) $(cvars) /DHOST_IS_WINNT=1 ../ttftp/ttftp.c
+
+moncmd.obj:	../moncmd/moncmd.c ../moncmd/moncmd.h
+	$(cc) -I. -I../moncmd -I../ttftp $(cflags) $(cvars) /DHOST_IS_WINNT=1 ../moncmd/moncmd.c
+
+newmon.obj:	newmon.c 
+	$(cc) -I. -I../moncmd -I../ttftp $(cflags) $(cvars) /DHOST_IS_WINNT=1 newmon.c
+
+clean:
+	rm -f *.obj $(AOUT)
+
+clobber:	clean
+	rm -f $(BIN)/$(AOUT)
+
+install:
+	cp $(AOUT) $(BIN)
+
+cscope:
+	ls newmon.c >cscope.files
+	ls ../moncmd/getopt.c >>cscope.files
+	ls ../moncmd/moncmd.c >>cscope.files
+	ls ../ttftp/ttftp.c >>cscope.files
+	ls ../moncmd/moncmd.h >>cscope.files
+	ls ../ttftp/ttftp.h >>cscope.files
+	ctags --file-tags=yes -n -L cscope.files

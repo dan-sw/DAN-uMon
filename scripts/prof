@@ -1,0 +1,52 @@
+################################################################################
+# File name: prof
+# Start profiler on the Target
+################################################################################
+
+###>>struct PROFILER_CFG {
+###>>	long	buf_start;
+###>>	long	buf_size;
+###>>	long	cur_offs;
+###>>	long	flags;
+###>>}
+
+# ------------- TCM profiler structure absolute address for all nodes
+# -------------  
+set ALLNODES    RX_CPU0    RX_CPU1    RX_DSP0    RX_DSP1    RX_DSP2    RX_DSP3    TX_CPU0    TX_CPU1    TX_CPU2    TX_CPU3    TX_DSP0    TX_DSP1    NPU_CPU0   NPU_CPU1   NPU_CPU2   NPU_CPU3   NPU_CPU4   NPU_CPU5
+set PROF_ADDRS  0x54117D88 0x54317D88 0x5442FD88 0x5452FD88 0x5462FD88 0x5472FD88 0x44017D88 0x44117D88 0x44217D88 0x44317D88 0x4442FD88 0x4452FD88 0x64017D88 0x64117D88 0x64217D88 0x64317D88 0x64417D88 0x64517D88
+
+gosub ProfOn4AllNodes
+exit
+
+
+########################################################
+# ProfOn4AllNodes:
+set idx 1
+# TOP_NODE_LOOP:
+item $idx addr $PROF_ADDRS
+item $idx node $ALLNODES
+if $addr seq \$addr goto NO_MORE_NODES
+gosub ProfOn
+set -i idx
+goto TOP_NODE_LOOP
+
+# NO_MORE_NODES:
+return
+
+
+########################################################
+# ProfOn:
+# Parameters:
+#   $idx  - CPU number (for debug prits only)
+#   $node - CPU name (for echo only)
+#	$addr - PROFILER_CFG struct address
+##set STRUCTBASE $addr
+##set STRUCTFILE $ARG0
+##cast PROFILER_CFG $addr
+struct -f $ARG0 PROFILER_CFG.flags
+set addr2=hex($addr+$STRUCTOFFSET)
+dm -4 -v tmp $addr2 4
+#echo $idx. STRUCTOFFSET = $STRUCTOFFSET, &flags = $addr2, flags = $tmp
+echo $idx. $node, flags = $tmp
+pm -4 -o $addr2 0x2
+return

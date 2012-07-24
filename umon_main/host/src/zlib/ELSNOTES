@@ -1,0 +1,8 @@
+1. Unzipped this from zlib.zip.
+2. Ran configure (under bash).
+3. Ran make... didn't work, so I built my own makefile and used nmake.
+	Created the makefile based on the output of make on the sun.
+	(could have used a modified version of the makefile under nt directory)
+4. Make now works.
+5. Removed extra stuff that was not needed for this build (all can be 
+	restored from zlib.zip if necessary).

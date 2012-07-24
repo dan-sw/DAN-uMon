@@ -1,0 +1,9 @@
+network,e				scripts/network
+monrc,e					scripts/monrc_cb_only
+run,e					scripts/run
+upgrade,e				scripts/upgrade
+params_init,e			scripts/params
+status,e				scripts/status
+structfile				scripts/structfile
+msim,e					scripts/msim
+msim_init,e				scripts/msim_init

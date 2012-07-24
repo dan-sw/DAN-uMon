@@ -1,0 +1,112 @@
+# newmon:
+# Used to automate the process of updating the monitor.
+# Unlike all other downloaded units on the target, the monitor is not
+# a file in the file system.  It is the boot code that contains
+# (among other things) the code that supports the file system; hence,
+# the command "flash ewrite" (erase and rewrite) pointing to the boot
+# sector of the flash is used to re-program the monitor.
+# Warning:
+# When running newmon, there is a duration of time through which if the
+# board is reset, it will not reboot.  This is because this script invokes
+# commands in the monitor that erase and re-write the boot sector.
+#
+# Command line syntax:
+#
+#   newmon {IP_address_of_target} {name_of_file_containing_new_boot_binary}
+#
+#
+
+###############################################################################
+#
+# targetcheck():
+# Ping the target, if no answer, exit here.
+#
+targetcheck()
+{
+	ping $IPADDR
+	if [ $? != 0 ]
+	then
+		exit $?
+	fi
+}
+
+###############################################################################
+#
+# filecheck():
+# Verify existence of the file, if non-existent, exit here.
+#
+filecheck()
+{
+	ls $BINFILE >/dev/null
+	if [ $? != 0 ]
+	then
+		exit $?
+	fi
+}
+
+###############################################################################
+#
+# filesize():
+# Using wc and awk, load the shell variable FILESIZE with the size of the
+# binary file to be downloaded.
+#
+filesize()
+{
+	FILESIZE=`wc -c $BINFILE | awk '{printf $1}'`
+	echo Download size: $FILESIZE
+}
+
+###############################################################################
+#
+# targetdld():
+# Issue a "reset -x" command to the target.  This will pull the target out
+# of any application and force it to not autoboot through TFS.  
+# Then download the new binary file.
+# Note that the "reset -x" command will time out waiting for a response
+# from the target.  This is correct because the target has just been reset,
+# so it doesn't know it is supposed to respond to anything.
+#
+targetdld()
+{
+	echo "***** Updating ppa monitor on $IPADDR..."
+	moncmd -w3 $IPADDR "reset -x"	# No response from reset
+	ttftp $IPADDR put $BINFILE \$APPRAMBASE
+	if [ $? != "0" ]
+	then
+		exit
+	fi
+}
+
+###############################################################################
+#
+# targetprgm():
+# Issue the flash command sequence that will erase the current boot code and
+# then transfer the new boot code (previously downloaded binary) from
+# RAM to FLASH.
+# Note that the "flash ewrite" command will time out because the monitor
+# is reset automatically after the rewrite completes; hence, it can't
+# respond.
+#
+targetprgm()
+{
+	moncmd $IPADDR "flash opw"
+	moncmd -w 2 $IPADDR "flash ewrite \$BOOTROMBASE  \$APPRAMBASE $FILESIZE"
+}
+
+###############################################################################
+###############################################################################
+#
+# main():
+# 
+if [ $# != 2 ]
+then
+	echo Usage: $0 IP filename
+	exit 1
+fi
+IPADDR=$1	# Arg1: IP address of target
+BINFILE=$2	# Arg2: Name if binary file (typically this is mon68.binary)
+targetcheck	# Verify target presence with a ping.
+filecheck	# Verify file existence.
+filesize	# Save file size in FILESIZE shell var.
+targetdld	# Reset target and download new binary.
+targetprgm	# Reprogram the flash with the new binary.

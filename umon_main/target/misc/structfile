@@ -1,0 +1,36 @@
+struct tfshdr {
+	short.x	hdrsize;
+	short.x	hdrvrsn;
+	long	filsize;
+	long	flags;	
+	long.x	filcrc; 
+	long.x	hdrcrc;	
+	long.x	modtime;
+	struct	tfshdr	*next;
+	char	name[24];
+	char	info[24];
+	long.x	rsvd1;
+	long.x	rsvd2;
+	long.x	rsvd3;
+	long.x	rsvd4;
+};
+
+struct tfsdefraghdr {
+	struct	tfshdr	fhdr;
+	long.x	phc;
+	long	bsn;
+	long	bso;
+	long	esn;
+	long	eso;
+	char.x	*nda;
+	char.x	*fdf;
+};
+
+struct tfsdat {
+	long	offset;
+	char.x	*base;	
+	char.x	*wptr;
+	long	flagmode;
+	struct	tfshdr hdr;
+};
+

@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <map>
+    <name>ul_10_map</name>
+    <BW_MHz>10</BW_MHz>
+    <single_ul_user>1</single_ul_user>
+    <sc_spacing_15kHz>1</sc_spacing_15kHz>
+    <frame_structure_type>type1_UL</frame_structure_type>
+    <N_cell_ID>0</N_cell_ID>
+    <is_normal_cp>1</is_normal_cp>
+    <ul_group_hopping_enabled>0</ul_group_hopping_enabled>
+    <ul_sequence_hopping_enabled>0</ul_sequence_hopping_enabled>
+    <cyclicShift>0</cyclicShift>
+    <ul_sequence_shift_delta>0</ul_sequence_shift_delta>
+    <frame>
+      <subframe>
+        <subframe_num>0</subframe_num>
+        <with_SRS>0</with_SRS>
+        <!-- SRS not supported yet -->
+        <PUSCH>
+          <RB_start>0</RB_start>
+          <L_CRB>10</L_CRB>
+          <TB>
+            <RNTI>0100</RNTI>
+            <MCS>8</MCS>
+            <data_src>#h123456</data_src>
+            <rv_idx>0</rv_idx>
+          </TB>
+        </PUSCH>
+      </subframe>
+    </frame>
+  </map>
+</root>
