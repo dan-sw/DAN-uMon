@@ -1,4 +1,0 @@
-echo Start msim_init script
-fm -4c 0x83600000 89400 0xFFFFFFFF
-echo End of msim_init script
-exit

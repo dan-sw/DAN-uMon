@@ -1,10 +1,12 @@
 This is the uMon project porting to 
 DesignArt Networks (DAN) DAN3400 SOC.
+The version from which it was branched is 1.18
 The uMon is a second phase boot loader
 on DAN's platform.
 
 project WIKI: https://github.com/dan-sw/DAN-uMon/wiki 
 
+For the original project please refer to http://www.umonfw.com/
 Refer to README.uMon for the original uMon readme file.
 Refer to LICENSE.txt for the software license. 
 Please send all patches/notes to 
