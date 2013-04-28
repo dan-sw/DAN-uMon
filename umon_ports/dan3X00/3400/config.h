@@ -80,6 +80,7 @@ extern const char *CPU_name;
 
 #define UINT32  unsigned
 #define UINT16  unsigned short
+#define UINT8	unsigned char
 
 #define VOID	void 
 
@@ -98,6 +99,9 @@ extern const char *CPU_name;
 #ifndef FALSE
 #define FALSE   0
 #endif
+
+typedef const char cchar;
+
 
 #ifndef __cplusplus
 #ifndef bool
@@ -128,30 +132,50 @@ extern const char *CPU_name;
 #define RegRead64(Address)			*((volatile uint64*) (Address))
 
 
+/*****************************************************************************\
+						Special DAN function for TCM access
+\*****************************************************************************/
+void memset_4aligned(int *to, int bytecount);
+void memcpy_4aligned(int *to, int *from, int bytecount);
+
 
 /*****************************************************************************\
 								Common macros
 \*****************************************************************************/
 #define	UNUSED(x)		((void)(x))
 
-#define	MIN(x, y)		((x) > (y)) ? (y) : (x)
-#define	MAX(x, y)		((x) > (y)) ? (x) : (y)
-
+#define	MIN(x, y)				((x) > (y)) ? (y) : (x)
+#define	MAX(x, y)				((x) > (y)) ? (x) : (y)
+#define CYCLIC_INC(x,base)      ((x)<(base-1)) ? (x+1) : 0
+#define CYCLIC_DEC(x,base)      (x)            ? (x-1) : (base-1)
 
 
 /*****************************************************************************\
-								    ASSERTS
+							ASSERTS & TRACES
 \*****************************************************************************/
-#define ASSERT(cond)											\
-	if (!(cond))												\
-{																\
-	printf("ASSERT: File %s, Line %u\n", __FILE__, __LINE__);	\
-	while(1);													\
-}
+#define ASSERT(cond)													\
+	if (!(cond))														\
+	{																	\
+		printf("ASSERT failure in function '%s' [%s:%d]\n", __FUNCTION__, __FILE__, __LINE__);	\
+		while(1);														\
+	}
+
+#if defined(TRACE_ENABLED) && defined(TRACE_ENABLED_PRINTF)
+// TRACE_ENABLED may be defined in common makefile per-project basis. It causes including trc.c code
+// TRACE_ENABLED_PRINTF should be only defined in files that willed be traced together with their printf calls. 
+// It will affects all printf/puts (including included h-files and ASSERT macro)
+// trcPrint/trcPuts are defined in trc.h
+// We assuming that printf & puts are not macro, but real funcs.
+// From now all printf/puts calls (and also from ASSERT) will actually call them.
+int  trcPrint (char* sformat, ...);
+void trcPuts  (char* str);
+#define printf trcPrint
+#define puts   trcPuts
+#endif // TRACE_ENABLED
 
 
 /*****************************************************************************\
-                UMON_TARGET supported by this makefile
+					UMON_TARGET supported by this makefile
 \*****************************************************************************/
 
 #if !defined(UMON_TARGET) ||                   \
@@ -192,7 +216,7 @@ extern const char *CPU_name;
 /* MONSTACKSIZE:
  * The amount of space allocated to the monitor's stack. 
  * This is the size in bytes of MonStack[] array, defined in start.c
- * KS: we are not using this stack mechanizm, so defining the dummy.
+ * KS: we are not using this stack mechanism, so defining the dummy.
  */
 #define MONSTACKSIZE			4
 
@@ -262,10 +286,6 @@ extern int          _bss_end;
 #define FLASH3400_RAM_BASE		0x00060000	// Range: 0x00060000..0x00080000+2*0x10000
 #endif
 
-
-//#define TFSSECTORCOUNT    	(FLASH3400_NUMSECTORS - 1)	// 1 - spare
-//#define TFSSPARESIZE    		FLASH3400_SECTORSIZE
-//#define TFSSPARE        		(TFSEND + 1)
 
 #define TFSSECTORCOUNT    		FLASH3400_NUMSECTORS	// spare is not used
 #define TFSSPARESIZE    		0

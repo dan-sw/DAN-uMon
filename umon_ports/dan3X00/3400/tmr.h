@@ -1,3 +1,4 @@
+/* Copyright 2013, Qualcomm Atheros, Inc. */
 /*
 All files except if stated otherwise in the begining of the file are under the GPLv2 license:
 -----------------------------------------------------------------------------------
@@ -22,79 +23,52 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  * Design Art Networks Copyright (c) 2012
  *
  * OWNER:                     Igor
- *
  *-----------------------------------------------------------
  */
 
 #ifndef _TMR_H
 #define _TMR_H
 
-/*
- * -----------------------------------------------------------
- * Include section
- * -----------------------------------------------------------
- */
 
-#include "config.h"
-#include "stddefs.h"
-
-/*
- * -----------------------------------------------------------
- * MACRO (define) section
- * -----------------------------------------------------------
- */
+#define DAN_HW_TIMER0_BASE  				 	0xE5730000
+#define dw_timers_if_TIMER1CURRENTVAL_OFFSET 	0x4
 
 
-
-/*
- * -----------------------------------------------------------
- * Type definition section
- * -----------------------------------------------------------
- */
-
-/*
- * -----------------------------------------------------------
- * Global prototypes section
- * -----------------------------------------------------------
- */
-
-/*
- * -----------------------------------------------------------
- * Local prototypes section
- * -----------------------------------------------------------
- */
-
-/*
- * -----------------------------------------------------------
- * Global data section
- * -----------------------------------------------------------
- */
-
-/*
- * -----------------------------------------------------------
- * Local (static) data section
- * -----------------------------------------------------------
- */
-
-/*
- * -----------------------------------------------------------
- * Local (static) and inline functions section
- * -----------------------------------------------------------
- */
+static inline void TMR_init(void)
+{
+	// Initialization wall-clock
+	RegWrite32 (DAN_HW_TIMER0_BASE, 0xFFFFFFFF);	// Set the load count to all 1's
+	RegWrite32 (DAN_HW_TIMER0_BASE + 8, 0x1);		// Enable the timer - unmasked int, free run mode, enabled
+}
 
 
-/*
- * -----------------------------------------------------------
- * Global functions section
- * -----------------------------------------------------------
- */
+/* Get current clock from HW timer (should be previously started) */
+static inline uint32 TMR_get_clk(void)
+{
+	return (0xFFFFFFFF - RegRead32(DAN_HW_TIMER0_BASE + dw_timers_if_TIMER1CURRENTVAL_OFFSET));
+}
 
-void TMR_init(void);
 
-uint32 TMR_get_clk(void); 
+/* Delay N-tick of HW timer */
+void TMR_tick_delay(uint32 tick);
 
-void TMR_tick_delay(uint32 tick);  
 
+/* Delay N usec-tick of HW timer */
 void TMR_usec_delay(uint32 usec);
+
+
+
+/**********************************************************************\
+							Timer functions
+\**********************************************************************/
+
+/* Start the timer - print current time to the console each nseconds.
+   Stop the timer if nseconds = 0.  */
+void TMR_Start(uint32 nseconds);
+
+
+/* Pinch the timer, must be called at least once in 14 seconds */
+void TMR_Pinch();
+
 
 #endif /* _TMR_H */

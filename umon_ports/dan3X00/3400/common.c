@@ -1,3 +1,4 @@
+/* Copyright 2013, Qualcomm Atheros, Inc. */
 /*
 All files except if stated otherwise in the begining of the file are under the GPLv2 license:
 -----------------------------------------------------------------------------------
@@ -37,6 +38,27 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #define MAX_IMAGE_SIZE (1024*1024)
 
 uint8 SPIF_device = FLASH3400_SYS_DEVID;
+
+
+int getenv_int(char * name)
+{
+	char * str = getenv(name);
+	if (!str) {
+		printf ("Environment variable %s not found", name);
+		return -1;
+	}
+	return (int)strtol(str,0,0);
+}
+
+int getenv_int_def(char * name, int defvalue)
+{
+	char * str = getenv(name);
+	if (!str) {
+		return defvalue;
+	}
+	return (int)strtol(str,0,0);
+}
+
 
 #ifdef DAN2400
 int upgrade_umon(int argc, char *argv[])

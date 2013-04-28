@@ -1,3 +1,4 @@
+/* Copyright 2013, Qualcomm Atheros, Inc. */
 /* start.c:
  *
  * This is typically the first 'C' code executed by the processor after a
@@ -42,6 +43,8 @@ extern void PRE_COMMANDLOOP_HOOK();
 #ifndef EXCEPTION_HEADING
 #define EXCEPTION_HEADING "EXCEPTION"
 #endif
+
+#define AUTORUN_RUN 1
 
 extern	void userinit(void);
 extern	void vinit(void);
@@ -380,7 +383,11 @@ void
 start(int state)
 {
     char    buf[48];
-
+	int     err;
+	TFILE	fstat, *fp;
+	char	*name;
+	int     fhandle;
+	
 #ifdef FORCE_BSS_INIT
 	state = INITIALIZE;
 #endif
@@ -464,6 +471,39 @@ start(int state)
 #ifdef PRE_COMMANDLOOP_HOOK
 	PRE_COMMANDLOOP_HOOK();
 #endif
+
+#ifdef AUTORUN_RUN
+    /*Execute run script automatically*/
+
+  fhandle = tfsopen("autorun",TFS_RDONLY,0);
+  
+   if(fhandle >= 0)
+   {
+       if(tfsclose(fhandle,0) != TFS_OKAY)
+        {
+            printf("Problem closing autorun\n\r");
+        } 
+        printf("Auto run detected\n\r");
+	   
+		name = "run";
+		fp = tfsstat(name);
+				
+		if (fp)
+		{
+			    
+			tfsfstat(name,&fstat);
+			
+			err = tfsscript(&fstat,0);	
+
+			if (err != TFS_OKAY)
+				 printf("Run executed with errors: %s\n",(char *)tfsctrl(TFS_ERRMSG,err,0));
+
+		}
+	   
+	    
+   }
+#endif
+
 
     /* Enter the endless loop of command processing: */
     CommandLoop();

@@ -1,0 +1,130 @@
+#RX FE #8 Channel scaler
+
+# Clear FIFO
+
+fm -c -4 0xc6122038 1 1
+fm -c -4 0xc6122038 1 0
+
+# Init CM
+
+fm -c -4 0xc6122004 1 0x0000000b
+fm -c -4 0xc6122008 1 0x00000000
+fm -c -4 0xc612200C 1 0xffffffff
+fm -c -4 0xc6122010 1 0x00000000
+fm -c -4 0xc6122014 1 0xffffffff
+fm -c -4 0xc6122018 1 0x00000000
+fm -c -4 0xc612201C 1 0x1200
+fm -c -4 0xc6122020 1 0x09C00000
+fm -c -4 0xc6122028 1 0x13d5
+
+# Disable Ext. Triggers
+
+fm -c -4 0xc6528524 1 127
+fm -c -4 0xc612851C 1 0x03
+
+# Enable CM
+
+fm -c -4 0xc6122004 1 0x0000001b  
+fm -c -4 0xc6122004 1 0x0000000b  
+
+
+# Config Signals 
+   
+fm -c -4 0xc61340fc 1 0x800c2040		
+
+# Mux1 Address & Index Configuration
+
+fm -c -4 0xc6528510 1 112
+fm -c -4 0xc6528514 1 113
+fm -c -4 0xc6528518 1 114
+fm -c -4 0xc652851C 1 115
+
+# Mux2 Address & Index Configuration
+
+fm -c -4 0xc6128514 1 0x0f0e0d0c
+
+# Config Number of samples
+
+fm -c -4 0xc6122018 1 0x00000010
+fm -c -4 0xc612201C 1 0x00010000
+
+# Enable CM
+
+fm -c -4 0xc6122004 1 0x1f
+fm -c -4 0xc6122004 1 0xf
+
+# Configure Triggers & Storage Mask/Value
+
+fm -c -4 0xc6122010 1 0xC0000000
+fm -c -4 0xc6122014 1 0x40000000
+
+############################################################### 
+#RX FE #0 Channel scaler
+
+# Clear FIFO
+
+fm -c -4 0xc6122074 1 0x1
+fm -c -4 0xc6122074 1 0x0
+
+# Init CM
+
+fm -c -4 0xc6122040 1 0x00000008
+fm -c -4 0xc6122044 1 0x00000000
+fm -c -4 0xc6122048 1 0xffffffff
+fm -c -4 0xc612204C 1 0x00000000
+fm -c -4 0xc6122050 1 0xffffffff
+fm -c -4 0xc6122054 1 0x00000000
+fm -c -4 0xc6122058 1 0x1200
+fm -c -4 0xc612205C 1 0x09c40000
+fm -c -4 0xc6122064 1 0x13d5
+
+# Disable Ext. Triggers
+
+fm -c -4 0xc6528524 1 127 
+
+fm -c -4 0xc612851C 1 0x03
+
+# Enable CM
+
+fm -c -4 0xc6122040 1 0x00000018 
+
+fm -c -4 0xc6122040 1 0x00000008 
+
+#Clear Memory
+
+ # Config Signals 
+
+fm -c -4 0xc61300fc 1 0x800c2040		
+
+# fir 1 0x802CA248
+
+#scaler 0x800c2040
+
+# CH_GAIN 0x80103081
+
+# Mux1 Address & Index Configuration
+
+fm -c -4 0xc6528500 1 156  
+fm -c -4 0xc6528504 1 157  
+fm -c -4 0xc6528508 1 158
+fm -c -4 0xc652850C 1 159
+
+# Mux2 Address & Index Configuration
+
+fm -c -4 0xc6128510 1 0x1f1e1d1c
+
+# Config Number of samples
+
+fm -c -4 0xc6122054 1 0x00000010
+fm -c -4 0xc6122058 1 0x00010000
+
+# Enable CM
+
+fm -c -4 0xc6122040 1 0x0000001c
+fm -c -4 0xc6122040 1 0x0000000c
+# Configure Triggers & Storage Mask/Value
+fm -c -4 0xc612204c 1 0xC0000000
+fm -c -4 0xc6122050 1 0x40000000
+
+ 
+

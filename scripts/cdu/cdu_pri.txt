@@ -1,0 +1,89 @@
+#RX PRI2 - CM0 Script:
+# Clear FIFO
+fm -c -4 0xc6122038 1 1
+fm -c -4 0xc6122038 1 0
+# Init CM
+fm -c -4 0xc6122004 1 0x0000000b
+fm -c -4 0xc6122008 1 0x00000000
+fm -c -4 0xc612200C 1 0xffffffff
+fm -c -4 0xc6122010 1 0x00000000
+fm -c -4 0xc6122014 1 0xffffffff
+fm -c -4 0xc6122018 1 0x00000000
+fm -c -4 0xc612201C 1 0x1200
+fm -c -4 0xc6122020 1 0x09c00000
+fm -c -4 0xc6122028 1 0x13d5
+# Disable Ext. Triggers
+fm -c -4 0xc6528524 1 127
+fm -c -4 0xc612851C 1 0x03
+# Enable CM
+fm -c -4 0xc6122004 1 0x0000001b 
+fm -c -4 0xc6122004 1 0x0000000b
+#Clear Memory
+
+# Config Signals 
+fm -c -4 0xC652E504 1 0x80083001       # 0xC652E504 	PRI2
+# Mux1 Address & Index Configuration
+fm -c -4 0xc6528510 1 20
+fm -c -4 0xc6528514 1 21
+fm -c -4 0xc6528518 1 22
+fm -c -4 0xc652851C 1 23
+# Mux2 Address & Index Configuration
+fm -c -4 0xc6128514 1 0x0f0e0d0c
+# CLK Configuration for Accelerator CLK
+fm -c -4 0xc6528528 1 0x03
+# Config Number of samples
+fm -c -4 0xc6122018 1 0x20
+fm -c -4 0xc612201C 1 0x10000
+# Enable CM
+fm -c -4 0xc6122004 1 0x1b
+fm -c -4 0xc6122004 1 0xf
+# Configure Triggers & Storage Mask/Value
+fm -c -4 0xc6122010 1 0x00010001 
+fm -c -4 0xc6122014 1 0x00010001 
+#fm -c -4 0xc6122008 1 0x00010001 
+#fm -c -4 0xc612200C 1 0x00010001
+
+#RX PRI0 - CM1 Script:
+# Clear FIFO
+fm -c -4 0xc6122074 1 1  
+fm -c -4 0xc6122074 1 0
+# Init CM
+fm -c -4 0xc6122040 1 0x0000000a
+fm -c -4 0xc6122044 1 0x00000000
+fm -c -4 0xc6122048 1 0xffffffff
+fm -c -4 0xc612204C 1 0x00000000
+fm -c -4 0xc6122050 1 0xffffffff
+fm -c -4 0xc6122054 1 0x00000000
+fm -c -4 0xc6122058 1 0x1200
+fm -c -4 0xc612205C 1 0x09c40000
+fm -c -4 0xc6122064 1 0x13d5
+# Disable Ext. Triggers
+fm -c -4 0xc6528524 1 127 
+fm -c -4 0xc612851C 1 0x03
+# Enable CM
+fm -c -4 0xc6122040 1 0x0000001a 
+fm -c -4 0xc6122040 1 0x0000000a
+#Clear Memory
+# Config Signals
+fm -c -4 0xc652A504 1 0x80083001		#0xc652A500	PRI0
+# Mux1 Address & Index Configuration
+fm -c -4 0xc6528500 1 148
+fm -c -4 0xc6528504 1 149
+fm -c -4 0xc6528508 1 150
+fm -c -4 0xc652850C 1 151
+# Mux2 Address & Index Configuration
+fm -c -4 0xc6128510 1 0x1f1e1d1c
+# CLK Configuration for Accelerator CLK
+fm -c -4 0xc6528528 1 0x03
+# Config Number of samples
+fm -c -4 0xc6122054 1 0x10
+fm -c -4 0xc6122058 1 0x10000
+# Enable CM
+fm -c -4 0xc6122040 1 0x1a
+fm -c -4 0xc6122040 1 0xe
+# Configure Triggers & Storage Mask/Value
+fm -c -4 0xc612204C 1 0x00010001
+fm -c -4 0xc6122050 1 0x00010001
+
+
+

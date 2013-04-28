@@ -1,0 +1,67 @@
+################################################################################
+# File name: prof
+# Start profiler on the Target
+# ARG1:
+#	- start - start the profiler, otherwise show the status flags only
+################################################################################
+
+###>>struct PROFILER_CFG {
+###>>	long	buf_start;
+###>>	long	buf_size;
+###>>	long	cur_offs;
+###>>	long	flags;
+###>>}
+
+# ------------- TCM profiler structure absolute address for all nodes
+# -------------  
+set ALLNODES    RX_CPU0    RX_CPU1    RX_DSP0    RX_DSP1    RX_DSP2    RX_DSP3    TX_CPU0    TX_CPU1    TX_CPU2    TX_CPU3    TX_DSP0    TX_DSP1    NPU_CPU0   NPU_CPU1   NPU_CPU2   NPU_CPU3   NPU_CPU4   NPU_CPU5
+set PROF_ADDRS  0x54117D88 0x54317D88 0x5442FD88 0x5452FD88 0x5462FD88 0x5472FD88 0x44017D88 0x44117D88 0x44217D88 0x44317D88 0x4442FD88 0x4452FD88 0x64017D88 0x64117D88 0x64217D88 0x64317D88 0x64417D88 0x64517D88
+
+gosub ProfOn4AllNodes
+exit
+
+
+########################################################
+# ProfOn4AllNodes:
+set idx 1
+# TOP_NODE_LOOP:
+item $idx addr $PROF_ADDRS
+item $idx node $ALLNODES
+if $addr seq \$addr goto NO_MORE_NODES
+gosub ProfOn
+set -i idx
+goto TOP_NODE_LOOP
+
+# NO_MORE_NODES:
+return
+
+
+########################################################
+# ProfOn:
+# Parameters:
+#   $idx  - CPU number (for debug prits only)
+#   $node - CPU name (for echo only)
+#	$addr - PROFILER_CFG struct address
+##set STRUCTBASE $addr
+##set STRUCTFILE $ARG0
+##cast PROFILER_CFG $addr
+
+struct -f $ARG0 PROFILER_CFG.cur_offs
+set addr2=hex($addr+$STRUCTOFFSET)
+if $ARG1 sne start 	goto skip_start1
+pm -4 $addr2 0		# .cur_offs = 0
+# skip_start1:
+dm -4 -v tmpof $addr2 4
+
+struct -f $ARG0 PROFILER_CFG.flags
+set addr2=hex($addr+$STRUCTOFFSET)
+if $ARG1 sne start 	goto skip_start2
+pm -4 -a $addr2 0xFFFEFFFF		# clear bit16 - PROFILER_CFG_FLAG_FINISHED
+pm -4 -o $addr2 0x2				# raise bit1  - PROFILER_CFG_FLAG_STARTED
+# skip_start2:
+dm -4 -v tmpfl $addr2 4
+
+#echo $idx. STRUCTOFFSET = $STRUCTOFFSET, &flags = $addr2, flags = $tmpfl
+echo $idx. $node, flags = $tmpfl, cur_offs = $tmpof
+
+return

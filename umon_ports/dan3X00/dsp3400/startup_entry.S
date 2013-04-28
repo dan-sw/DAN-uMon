@@ -1,3 +1,4 @@
+/* Copyright 2013, Qualcomm Atheros, Inc. */
 /*
 All files except if stated otherwise in the begining of the file are under the GPLv2 license:
 -----------------------------------------------------------------------------------
@@ -20,10 +21,15 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  Purpose    :  First uMON entry point located in TCM
  Owner		:  Sergey Krasnitsky
  Created    :  11.11.2010
+ Note		:  This code needed to be loaded when running under debugger 
+			   only - it's the strat point. When running from Boot-ROM 
+			   it is unused, may be commented out.
 \**********************************************************************/
 
+/*
 	.section		.SharedResetVector.text, "ax"
 	.align	4
 	movi	a0, 0x404
 	slli	a0, a0, 20
 	jx		a0
+*/

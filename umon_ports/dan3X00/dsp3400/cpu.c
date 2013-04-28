@@ -1,3 +1,4 @@
+/* Copyright 2013, Qualcomm Atheros, Inc. */
 /*
 All files except if stated otherwise in the begining of the file are under the GPLv2 license:
 -----------------------------------------------------------------------------------
@@ -24,7 +25,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "config.h"
 #include "cpu.h"
-#include "stdio.h"
+#include "genlib.h"
 #include "common.h"
 #include "CGEN.h"
 #include "spi.h"
@@ -54,6 +55,6 @@ void CPU_Init()
 #endif
 	CPU_SystemClock = CGEN_PLL0_get_clk(INPUT_CLOCK_HZ);// Input clock in Hz
 	CPU_BusClock = CPU_SystemClock / 2;					// Half system clock
-	sprintf(CPU_name_buf, "DAN3400 (DSP: %u MHz, DDR: %u MHz)", 
-			CPU_SystemClock / 1000000, DDR_CLOCK);
+
+	sprintf(CPU_name_buf, "DAN3400 (DSP: %u MHz, DDR: %u MHz)",  CPU_SystemClock / 1000000, DDR_CLOCK);
 }

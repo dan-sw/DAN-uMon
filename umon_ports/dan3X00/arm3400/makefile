@@ -1,3 +1,4 @@
+# Copyright 2013, Qualcomm Atheros, Inc. 
 ###############################################################################
 #
 # DAN3400 board makefile.
@@ -36,6 +37,8 @@ ifeq ($(DEBUG),)
 DEBUG	= 0
 endif
 
+#TRACE=1
+
 CFLAGS += -DARM
 
 OSTYPE := $(shell uname)
@@ -73,11 +76,11 @@ include ../3400/3400.make
 #
 # Redefine some non-standard ARM tool names and other things from common.make.
 #
-NM	= $(ARM_TOOL_PATH)/$(ARM_TOOL_SUFFIX)-nm
-AR	= $(ARM_TOOL_PATH)/$(ARM_TOOL_SUFFIX)-ar
-LD 	= $(ARM_TOOL_PATH)/$(ARM_TOOL_SUFFIX)-ld
-ASM	= $(ARM_TOOL_PATH)/$(ARM_TOOL_SUFFIX)-as
-CC 	= $(ARM_TOOL_PATH)/$(ARM_TOOL_SUFFIX)-gcc
+NM		= $(ARM_TOOL_PATH)/$(ARM_TOOL_SUFFIX)-nm
+AR		= $(ARM_TOOL_PATH)/$(ARM_TOOL_SUFFIX)-ar
+LD 		= $(ARM_TOOL_PATH)/$(ARM_TOOL_SUFFIX)-ld
+ASM		= $(ARM_TOOL_PATH)/$(ARM_TOOL_SUFFIX)-as
+CC 		= $(ARM_TOOL_PATH)/$(ARM_TOOL_SUFFIX)-gcc
 STRIP	= $(ARM_TOOL_PATH)/$(ARM_TOOL_SUFFIX)-strip
 OBJCOPY	= $(ARM_TOOL_PATH)/$(ARM_TOOL_SUFFIX)-objcopy
 OBJDUMP	= $(ARM_TOOL_PATH)/$(ARM_TOOL_SUFFIX)-objdump

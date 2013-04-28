@@ -1,3 +1,4 @@
+# Copyright 2013, Qualcomm Atheros, Inc.
 SHELL := /bin/dash
 
 ifeq ($(BUILD_ID),)
@@ -19,7 +20,7 @@ DDR = 800
 endif
 
 default:	all
-all:		arm dsp cpu umon tfs
+all:		cpu dsp arm umon tfs
 
 
 cb_only:	umon_cb_only tfs_cb_only	

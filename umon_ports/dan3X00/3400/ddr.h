@@ -1,3 +1,4 @@
+/* Copyright 2013, Qualcomm Atheros, Inc. */
 /*
 All files except if stated otherwise in the begining of the file are under the GPLv2 license:
 -----------------------------------------------------------------------------------
@@ -17,6 +18,8 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //DEBUG FLAGS
 //#define USE_DBG_GPIO
 //#define UART_PUTS_EN
+#define SAVE_RESTORE_DDR_CONTEXT 1	
+
 #define WDT_USE_EN
 
 // USED DDR'S

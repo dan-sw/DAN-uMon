@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<root>
+  <sim_params>
+    <nominal_sto_mode>half_cp</nominal_sto_mode>
+    <display_params_file>6</display_params_file>
+    <map_file>@/inband.xml</map_file>
+    <test_points_file>@/test_points.xml</test_points_file>
+    <rand_seed>1234</rand_seed>
+
+    <channel>
+         <channel_type>AWGN</channel_type>
+         <SNR_dB>20</SNR_dB>
+         <CFO_Hz>0</CFO_Hz>
+         <STO>0</STO>
+         <trans_mat>eye(4,4)</trans_mat>
+		 <no_awgn_noise>1</no_awgn_noise>
+     </channel>
+
+
+  </sim_params>
+
+  <sys_set>
+    <is_DL_sys>0</is_DL_sys>
+    <digital_IF>0</digital_IF>
+    <out_Fsamp>1</out_Fsamp>
+    <tx_ant_num>1</tx_ant_num>
+    <rx_ant_num>1</rx_ant_num>
+    <use_nominal_NFFT>0</use_nominal_NFFT> 
+    <ul_with_half_sc_shift>1</ul_with_half_sc_shift>
+    <BW_MHz>10</BW_MHz>
+    <agc>
+       <mode>BS</mode>
+       <nominal_ADC_BO_dB>25</nominal_ADC_BO_dB>
+       <nominal_SNR_dB>40</nominal_SNR_dB>
+    </agc>
+  </sys_set>
+
+</root>

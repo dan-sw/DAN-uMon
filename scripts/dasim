@@ -1,0 +1,134 @@
+
+if $ARG2 seq \$ARG2  goto wrong_ARGS
+
+# Save ARG1 & ARG2 values in ARG1_ & ARG2_ (it may be cleared after calling other batch files)
+set ARG1_ '$ARG1'
+set ARG2_ $ARG2
+set ARG3_ $ARG3
+
+# Reset UMON_TMP_DOWNLOAD address to its default
+set UMON_TMP_DOWNLOAD	$UMON_TMP_DOWNLOAD_DEF
+
+# Allocate additional heap needed for unzipping
+-heap -X $UMON_TMP_HEAP,$UMON_TMP_HEAP_SIZE
+
+if $ARG1_ seq '-s'  goto arg1_tftp
+
+if $ARG1_ seq '-o'  goto get_NF_SFN
+
+if $ARG1_ seq '-v'  goto vector_player
+
+goto wrong_ARGS
+
+# arg1_tftp:   by default
+set GET_CMD		GetFileTftp
+
+#file name passed as argument for mac sim script
+set ANT0_DATA_DDR_ADDR	0x0F896400
+set ANT1_DATA_DDR_ADDR	0x0F9C2400
+set PUSCH_BUF_DDR_ADDR  0x82800000
+set Ant0  ant0.bin
+set Ant1  ant1.bin
+set Prach PRACH.bin
+
+set GetFile_NAME $ARG2_
+#file name for ant0 data
+set GetFile_NAME_ANT0 $ARG2_$Ant0
+#file name for ant1 data
+set GetFile_NAME_ANT1 $ARG2_$Ant1
+#file name for PRACH data
+set GetFile_NAME_PRACH $ARG2_$Prach
+
+gosub $GET_CMD
+if $GetFile_RESULT eq 0 goto FILE_ERR
+gosub RunRamScript
+
+# Notification which tells FFT input data is loaded from script
+pm -4 0x82A00000 0x1F1F1F1F
+goto FILE_END
+
+# get_NF_SFN:
+if $ARG3 seq \$ARG3  goto wrong_ARGS
+if $ARG2 gt 1023 goto wrong_FN_SFN
+if $ARG3 gt 9 goto wrong_FN_SFN
+set NF $ARG2_
+set SFN $ARG3_
+pm -4 0x82A00020 $SFN
+pm -4 0x82A00040 $NF
+read -t400000 name
+set file1 "FN$NF"
+set file2 "_SFN$SFN"
+set file3 "_Ant0"
+set file4 "_Ant1"
+set file5 $file1$file2$file3
+set file6 $file1$file2$file4
+echo "Please use the below TFTP commands from host PC to get the 2 antenna Data for FN: $NF and SFN: $SFN\n"
+echo "tftp 192.168.1.10 get 0xFB2A400,61440 $file5.bin"
+echo "tftp 192.168.1.10 get 0xFB48400,61440 $file6.bin"
+echo
+goto FILE_END
+
+# vector_player:
+set ANT0_DATA_DDR_ADDR	0x89e00000
+set ANT1_DATA_DDR_ADDR	0x8A2B0000
+
+set Ant0  Mhz_100_0.bin
+set Ant1  Mhz_100_1.bin
+set Pre   dl_
+set GetFile_NAME_ANT0 $Pre$ARG2$Ant0
+set GetFile_NAME_ANT1 $Pre$ARG2$Ant1
+tftp $TFTP_SERVER_ADDR get $GetFile_NAME_ANT0 $ANT0_DATA_DDR_ADDR
+tftp $TFTP_SERVER_ADDR get $GetFile_NAME_ANT1 $ANT1_DATA_DDR_ADDR
+goto FILE_END
+
+# wrong_FN_SFN:
+echo "Frame number should be in the range 0 - 1023 and subFrame number 0 - 9"
+
+# wrong_ARGS:
+echo "Usage for loading script is   >runs -s <script name>"
+echo "Usage for getting subframe data is >runs -o <Frame Nmber> <SubFrame Number>"
+echo "Usage for vector player is >runs -v <10/20>\n"
+goto FILE_END
+
+# FILE_ERR:
+echo Error getting file '$ARG2_'
+# FILE_END:
+
+heap -x
+exit
+
+########################################################
+# GetFileTftp:
+# Get file from TFTP
+# Parameters:
+# 	$GetFile_NAME	- file name to get
+# Return:
+# 	$GetFile_RESULT	- 0/<FileSize> when error/ok
+tftp $TFTP_SERVER_ADDR get $GetFile_NAME_PRACH $PUSCH_BUF_DDR_ADDR
+
+tftp $TFTP_SERVER_ADDR get $GetFile_NAME_ANT0 $ANT0_DATA_DDR_ADDR
+if $TFTPGET seq \$TFTPGET goto tftp_err
+tftp $TFTP_SERVER_ADDR get $GetFile_NAME_ANT1 $ANT1_DATA_DDR_ADDR
+if $TFTPGET seq \$TFTPGET goto tftp_err
+tftp $TFTP_SERVER_ADDR get $GetFile_NAME $UMON_TMP_DOWNLOAD
+if $TFTPGET seq \$TFTPGET goto tftp_err
+set GetFile_RESULT $TFTPGET
+return
+# tftp_err:
+set GetFile_RESULT 0
+return
+
+
+########################################################
+# RunRamScript:
+# run script $GetFile_NAME,$GetFile_RESULT(size)from $UMON_TMP_DOWNLOAD
+
+echo Running '$GetFile_NAME'
+set RAM_ADDR $UMON_TMP_DOWNLOAD
+set -i -x RAM_ADDR 0x20000	# the RAM drive size & max file size is 128Kb
+tfs ramdev tmp $RAM_ADDR 0x20000
+tfs -fe add //tmp/$GetFile_NAME $UMON_TMP_DOWNLOAD $GetFile_RESULT
+//tmp/$GetFile_NAME $ARG3_
+tfs rm //tmp/$GetFile_NAME
+tfs ramdev tmp $UMON_TMP_DOWNLOAD 0
+return

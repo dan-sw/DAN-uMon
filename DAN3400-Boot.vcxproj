@@ -137,6 +137,10 @@
     <ClInclude Include="umon_ports\dan3X00\3400\tfsdev.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="umon_ports\dan3X00\3400\tmr.h" />
+    <ClInclude Include="umon_ports\dan3X00\3400\trc.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="umon_ports\dan3X00\3400\xcmddcl.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
     </ClInclude>
@@ -528,6 +532,10 @@
     <ClCompile Include="umon_ports\dan3X00\3400\spi.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="umon_ports\dan3X00\3400\tmr.c" />
+    <ClCompile Include="umon_ports\dan3X00\3400\trc.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="umon_ports\dan3X00\3400\umon_loader.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='uMon-WinSim|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -587,10 +595,11 @@
     <None Include="scripts\DAN3X00_test_list.script" />
     <None Include="scripts\linux" />
     <None Include="scripts\monrc" />
+    <None Include="scripts\prof" />
     <None Include="scripts\reg_test_prep.script" />
     <None Include="scripts\run" />
     <None Include="scripts\runs" />
-    <None Include="scripts\status" />
+    <None Include="scripts\spitest" />
     <None Include="scripts\structfile" />
     <None Include="scripts\upgrade" />
     <None Include="scripts\ver" />
@@ -698,6 +707,7 @@
     <LibraryPath />
     <SourcePath />
     <ExcludePath />
+    <NMakePreprocessorDefinitions>TRACE_ENABLED</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Xtensa-deb-uart|Win32'">
     <NMakeCleanCommandLine>make -C umon_ports\dan3X00\cpu3400 clean</NMakeCleanCommandLine>

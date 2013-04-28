@@ -1,3 +1,4 @@
+// Copyright 2013, Qualcomm Atheros, Inc.
 //  Memory map file to generate linker scripts for programs with tiny runtime.
 
 // $Id: memmap.xmm,v 1.2 2009/12/23 14:12:18 avid Exp $
@@ -15,23 +16,18 @@ INCLUDE_XT2000_MEMORIES = false
 VECBASE = 0x60401000
 VECSELECT = 0
 
-
-BEGIN dram0
-0x5ffd0000: dataRam : dram0 : 0x10000 : writable ;
- dram0_0 : C : 0x5ffd0000 - 0x5ffdffff : .SharedResetVector.literal .iram0.literal .dram0.rodata .dram0.literal .dram0.data .dram0.bss;
-END dram0
-
+// Tensilica LSP file requires .ResetVector.text OR .SharedResetVector.text @ 0x5ffe0000
+// The .SharedResetVector.literal has 0-size and put in sram_1
 BEGIN iram0
-0x5ffe0000: instRam : iram0 : 0x10000 : executable, writable ;
- iram0_0 : F : 0x5ffe0000 - 0x5ffe000f : .SharedResetVector.text;
- iram0_1 : C : 0x5ffe0010 - 0x5ffeffff : .iram0.text;
+0x5ffe0000: instRam : iram0 : 0x2 : executable, writable ;
+ iram0_0 : F : 0x5ffe0000 - 0x5ffe0001 : .SharedResetVector.text;
 END iram0
 
 
 BEGIN sram
 0x60400000: sysram : sram : 0x60000 : executable, writable;
  sram_0  : F : 0x60400000 - 0x604001ff : .ResetVector.text;
- sram_1  : C : 0x60400200 - 0x60400fff : .lit4 .literal .Level2InterruptVector.literal .Level3InterruptVector.literal .Level4InterruptVector.literal .Level5InterruptVector.literal .DebugExceptionVector.literal .KernelExceptionVector.literal .UserExceptionVector.literal .DoubleExceptionVector.literal ;
+ sram_1  : C : 0x60400200 - 0x60400fff : .lit4 .literal .SharedResetVector.literal .Level2InterruptVector.literal .Level3InterruptVector.literal .Level4InterruptVector.literal .Level5InterruptVector.literal .DebugExceptionVector.literal .KernelExceptionVector.literal .UserExceptionVector.literal .DoubleExceptionVector.literal;
  sram_2  : F : 0x60401000 - 0x60401177 : .WindowVectors.text;
  sram_3  : C : 0x60401178 - 0x6040117b : ;
  sram_4  : F : 0x6040117c - 0x60401197 : .Level2InterruptVector.text;

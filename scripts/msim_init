@@ -1,0 +1,8 @@
+echo Start msim_init script
+echo Revision 2.0
+fm -4c 0x83600000 140488 0xFFFFFFFF
+
+# Notification which tells FFT input data is not loaded from script
+pm -4 0x82A00000 0
+echo End of msim_init script
+exit

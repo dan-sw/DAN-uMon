@@ -1,3 +1,4 @@
+/* Copyright 2013, Qualcomm Atheros, Inc. */
 /*
 All files except if stated otherwise in the begining of the file are under the GPLv2 license:
 -----------------------------------------------------------------------------------
@@ -32,3 +33,12 @@ extern char *ddr_init_help[];
 extern int ddr_init_cli(int argc, char *argv[]);
 extern char *dancli_Checkcrc_help[];
 extern int dancli_Checkcrc(int argc, char *argv[]);
+extern char *dancli_Ds_help[];
+extern int dancli_Ds(int argc, char *argv[]);
+extern char *dancli_Trc_help[];
+extern int dancli_Trc(int argc, char *argv[]);
+extern char *dancli_Timer_help[];
+extern int dancli_Timer(int argc, char *argv[]);
+extern char *dancli_Status_help[];
+extern int dancli_Status(int argc, char *argv[]);
+

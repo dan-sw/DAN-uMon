@@ -42,11 +42,11 @@ endif
 #
 # Redefine some non-standard Tensilica tool names and other things from common.make.
 #
-NM	= $(TEN_TOOL_PATH)/xt-nm
-AR	= $(TEN_TOOL_PATH)/xt-ar
-LD 	= $(TEN_TOOL_PATH)/xt-xcc
-ASM	= $(TEN_TOOL_PATH)/xt-as
-CC 	= $(TEN_TOOL_PATH)/xt-xcc
+NM		= $(TEN_TOOL_PATH)/xt-nm
+AR		= $(TEN_TOOL_PATH)/xt-ar
+LD 		= $(TEN_TOOL_PATH)/xt-xcc
+ASM		= $(TEN_TOOL_PATH)/xt-as
+CC 		= $(TEN_TOOL_PATH)/xt-xcc
 STRIP	= $(TEN_TOOL_PATH)/xt-strip
 OBJCOPY	= $(TEN_TOOL_PATH)/xt-objcopy
 OBJDUMP	= $(TEN_TOOL_PATH)/xt-objdump
@@ -81,11 +81,11 @@ LFLAGS			+= -mlsp=$(TEN_LSP_DIR)
 LFLAGS			+= -Wl,-Map=$(MAP)
 LFLAGS			+= -Wl,--defsym,_memmap_cacheattr_reset=0
 LFLAGS			+= -Wl,--defsym,_memmap_cacheattr_reset=0x22224444
-LFLAGS_PIGGY		= $(CFLAGS)
-LFLAGS_PIGGY		+= -mlsp=$(TEN_LSP_DIR_PIGGY)
-LFLAGS_PIGGY		+= -Wl,-Map=$(PIGGY_MAP)
-LFLAGS_PIGGY		+= -Wl,--defsym,_memmap_cacheattr_reset=0
-LFLAGS_PIGGY		+= -Wl,--defsym,_memmap_cacheattr_reset=0x22224444
+LFLAGS_PIGGY	= $(CFLAGS)
+LFLAGS_PIGGY	+= -mlsp=$(TEN_LSP_DIR_PIGGY)
+LFLAGS_PIGGY	+= -Wl,-Map=$(PIGGY_MAP)
+LFLAGS_PIGGY	+= -Wl,--defsym,_memmap_cacheattr_reset=0
+LFLAGS_PIGGY	+= -Wl,--defsym,_memmap_cacheattr_reset=0x22224444
 
 SECTIONS_DATA_PIGGY	= $(SECTIONS_DATA) -j .piggy.rodata
 

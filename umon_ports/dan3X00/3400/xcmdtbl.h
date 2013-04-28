@@ -1,3 +1,4 @@
+/* Copyright 2013, Qualcomm Atheros, Inc. */
 /*
 All files except if stated otherwise in the begining of the file are under the GPLv2 license:
 -----------------------------------------------------------------------------------
@@ -28,3 +29,10 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
         { "spif_device", spif_device, spif_device_help, 0 },
         { "ddr_init", ddr_init_cli, ddr_init_help, 0 },
         { "checkcrc", dancli_Checkcrc, dancli_Checkcrc_help, 0 },
+        { "ds", dancli_Ds, dancli_Ds_help, 0 },
+        { "timer", dancli_Timer, dancli_Timer_help, 0 },
+		{ "status", dancli_Status, dancli_Status_help, 0 },
+#ifdef TRACE_ENABLED
+        { "trc", dancli_Trc, dancli_Trc_help, 0 },
+#endif
+

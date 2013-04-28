@@ -1,0 +1,97 @@
+##########################################################################
+# File name: spitest
+# Tests Bank#1 for read-write
+# ARG1:
+#	- read | write
+# ARG2
+#	- usecb | useddr
+# ARG3 - optional
+#	- forever
+##########################################################################
+
+if $ARG1 seq read   goto arg1_ok
+if $ARG1 seq write  goto arg1_ok
+echo "ARG1 must be read or write"
+exit
+# arg1_ok:
+
+if $ARG2 seq usecb   goto arg2_ok
+if $ARG2 seq useddr  goto arg2_ok
+echo "ARG2 must be usecb or useddr"
+exit
+# arg2_ok:
+
+
+# Number of flash sectors for the test (8Mb):
+set TEST_SIZE_NSECT	 256
+
+# mem0 - DDR0 memory for reading to it
+# mem1 - DDR0 memory for writing from, initially filled with pattern
+
+set mem0 $UMON_TMP_DOWNLOAD
+if $ARG2 seq useddr goto skip_usecb
+set mem0 $MEM_CB_RX
+# skip_usecb:
+set mem1 $mem0
+set -i mem1 $FLASH_SECSIZE
+
+# Fill $mem1 with 0x12345678 pattern
+fm -4 -c $mem1 $FLASH_SECSIZE 0x12345678
+
+spif_device 1
+
+# Switch TRC buffer to RX CB
+-trc -b0x50420000 init
+
+timer -i4 start
+
+# START_TEST:
+
+if $ARG1 seq read goto read_echo
+echo Start write flash test
+goto endif
+# read_echo:
+echo Start read flash test
+# endif:
+
+
+set isec_flash	0
+set iaddr_flash	0
+
+
+# WRITE_LOOP:
+if $isec_flash ge $TEST_SIZE_NSECT goto WRITE_LOOP_DONE
+
+if $ARG1 seq write  goto write_label
+if $ARG1 seq read   goto read_label
+
+# write_label:
+spif berase $iaddr_flash  $FLASH_SECSIZE_K
+spif write  $iaddr_flash  $mem1  $FLASH_SECSIZE
+goto CONTINUE_LOOP
+
+# read_label:
+spif read   $iaddr_flash  $mem0  $FLASH_SECSIZE
+echo Verifying...
+-cm -v -4 $mem1 $mem0 $FLASH_SECSIZE
+
+if $CMDSTAT seq PASS goto CONTINUE_LOOP
+echo Test FAILED at Flash sector $isec_flash (address=$iaddr_flash)
+exit
+
+# CONTINUE_LOOP:
+timer pinch
+set -i isec_flash
+set -i -x iaddr_flash $FLASH_SECSIZE
+
+#When uMON itself prints log the folowing dot is redundant
+#echo .\c
+goto WRITE_LOOP
+# WRITE_LOOP_DONE:
+
+echo 
+
+if $ARG3 seq forever  goto START_TEST
+
+echo End of test
+exit

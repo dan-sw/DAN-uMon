@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<root>
+	<test_points>
+		<working_directory>@</working_directory>
+		<rx_fft><in><file_action>to_file</file_action></in></rx_fft>
+	</test_points>
+</root>

@@ -1,3 +1,4 @@
+/* Copyright 2013, Qualcomm Atheros, Inc. */
 /* tfsloader.c:
  *	This file contains the code that is specific to each of the file types
  *	supported by TFS as the binary executable type.
@@ -294,7 +295,7 @@ tfsloadcoff(TFILE *fp,int verbose,long *entrypoint,char *sname,int verifyonly)
 #if TFS_EBIN_ELF | TFS_EBIN_ELFMSBIN
 
 // DAN func for the following tfsloadelf func
-static inline void memset_4aligned(int *to, int bytecount)
+void memset_4aligned(int *to, int bytecount)
 {
 	int *end = to + (bytecount / sizeof(int));
 	int *to1 = (int*) (((int)to + 3) & ~3); // align 'to' to next 4-byte boundary. 

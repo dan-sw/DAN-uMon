@@ -1,0 +1,158 @@
+##########################################################################
+# File name: monrc_cb_only
+# Main autoexec script used by uMon when it starts (for DAN3400 without DDR)
+##########################################################################
+
+set MEM_CB_TX				0x40400000				# TX CB will be used for uMon image temporary buffer 
+set MEM_CB_RX				0x50400000				# RX CB will be used for uMon image temporary buffer (for validation)
+set FLASH_SECSIZE				 65536				# Flash sector size (each write operation executes per a sector)
+set FLASH_SECSIZE_K				   64K				# Flash sector size in kilobytes
+set FLASH_BANK_ID_UMON				 0				# Bank ID of the uMon's & JFFS2 flash
+
+set UMON_FILE		boot_flash.hex.bin				# uMon's image (including TFS) file name on TFTP server
+set UMON_FILE_TFS_OFFS		   0xE0000				# Offset (in bytes) to TFS location inside UMON_FILE (it's sector #14, starting from 0)
+set UMON_FLASH_NSECTORS			    16				# Number of flash sectors utilized by uMon. Thus, the uMon image size is UMON_FLASH_NSECTORS x FLASH_SECSIZE
+set UMON_FLASH_ADDR					 0				# uMon + TFS start address on the flash for the burning
+
+set JFFS2_FILE				apps.jffs2				# JFFS2 image containing all nodes applications
+set JFFS2BASE				0x00100000				# JFFS2 file system base address (mandatory uMon's var)
+set JFFS2SIZE				  0x700000				# JFFS2 file system max size, in bytes
+set JFFS2_FLASH_NSECTORS		   112				# Number of flash sectors utilized by JFFS2 image (7Mb). Thus, the JFFS2 image size is JFFS2_FLASH_NSECTORS x FLASH_SECSIZE
+set JFFS2_FLASH_ADDR			    32				# JFFS2 image start address on the flash (sector#)
+
+set TFS_ADDR				   0x60000				# TFS-mirroring start address in RAM (may be used for direct access when upgrading in some cases. Note: it != UMON_FILE_TFS_OFFS because UMON_FILE contains sevaral uMON binaries for different CPU's)
+set TFS_SIZE				   0x20000				# TFS-mirroring size in bytes
+
+set UMON_TMP_HEAP			0x40558000				# tmp buf used by run script for additional uMON heap when decompressing
+set UMON_TMP_HEAP_SIZE		   0x20000				# Size of UMON_TMP_HEAP
+set UMON_TMP_DOWNLOAD		0x50558000				# uMon tmp buffer for downloading files; it's size should fit to max size of possibly downloaded file
+set UMON_TMP_DOWNLOAD_DEF	$UMON_TMP_DOWNLOAD		# In the case UMON_TMP_DOWNLOAD is changed, it may be reset to this value
+
+set BASIC_PARAMS_ADDR 		0x404EFCC0  			# Address of Basic parameters structure (must correspond to memory Locator DB)
+set BASIC_PARAMS_SIZE			 0x340				# Max size of Basic parameters structure
+
+set RUN_ARG1 					  tftp				# run script def value for argument#1
+set RUN_ARG2 				   nolinux				# run script def value for argument#2
+
+-network
+
+if $ETHERADD sne \$ETHERADD goto next_1
+echo Set ETHERADD:
+read ETHERADD
+
+# next_1:
+if $HOSTNAME sne \$HOSTNAME goto next_2
+echo Set HOSTNAME:
+read HOSTNAME
+
+# next_2:
+if $IPADD sne \$IPADD goto next_3
+echo Set IPADD:
+read IPADD
+
+# next_3:
+if $IPADD seq DHCP goto next_31
+set IPADD_BKP $IPADD
+goto next_4
+# next_31
+echo Set IPADD_BKP:
+read IPADD_BKP
+
+# next_4:
+if $GIPADD sne \$GIPADD goto next_5
+echo Set GIPADD:
+read GIPADD
+
+# next_5:
+if $NETMASK sne \$NETMASK goto next_6
+echo Set NETMASK:
+read NETMASK
+
+# next_6:
+if $TFTP_SERVER_ADDR sne \$TFTP_SERVER_ADDR goto skip_network_creation
+echo Set TFTP_SERVER_ADDR:
+read TFTP_SERVER_ADDR
+
+echo set ETHERADD 			$ETHERADD	>$APPRAMBASE,256
+echo set HOSTNAME			$HOSTNAME	>>
+echo set IPADD 				$IPADD 		>>
+echo set IPADD_BKP			$IPADD_BKP 	>>
+echo set GIPADD 			$GIPADD 	>>
+echo set NETMASK 			$NETMASK 	>>
+echo set TFTP_SERVER_ADDR	$TFTP_SERVER_ADDR >>
+echo >>network,e
+
+# skip_network_creation:
+
+gosub ConfigGmac
+sleep -l 25000
+
+gosub SetPostedWrite4AllNodes
+
+# Set default activity mask
+pm -4 0xE573E004 0x931e0000
+
+# Initialize JTAG debugger mask
+fm -c 0xc04fff80 32 0xff
+
+#Avoid usage of DDR (using HW firewall feature)
+pm -4 0xe2001448 0
+pm -4 0xe2001848 0
+pm -4 0xe2001c48 0
+pm -4 0xe2002048 0
+pm -4 0xd2000c48 0
+pm -4 0xd2001048 0
+pm -4 0xd2001448 0
+pm -4 0xd2001848 0
+pm -4 0xd2021c00 0
+pm -4 0xd2022000 0
+pm -4 0xd2022400 0
+pm -4 0xd2022800 0
+pm -4 0xd2011400 0
+pm -4 0xd2011800 0
+pm -4 0xd2011c00 0
+pm -4 0xd2012000 0
+pm -4 0xc2010800 0
+pm -4 0xc2010c00 0
+
+# Load Basic parameters structure
+set STRUCTFILE params_init
+set STRUCTBASE $BASIC_PARAMS_ADDR
+set -o STRUCTBASE 0x80000000	# make the addr non-cacheable
+pm -4 $STRUCTBASE 0xFFFFFFFF	# set the struct version word 0xFFFFFFFF for the case params is absent
+
+-params_init
+-params
+
+exit
+
+
+########################################################
+# Subroutine: SetPostedWrite4AllNodes
+# Note: Nodes Posted Write address is calculated as follows:
+# (For each node there is a Programming Model base addresses)
+# For CPU: it's PM base + 0x400
+# For DSP: it's PM base + 0x550
+# SetPostedWrite4AllNodes:
+set idx 1
+# NODES_LOOP:
+# 	Table Nodes/Program Model (PM) addresses
+# 	Nodes:			TX_CPU0		TX_CPU1		TX_CPU2		TX_CPU3		TX_DSP0		TX_DSP1		RX_CPU0		RX_CPU1		RX_DSP0		RX_DSP1		RX_DSP2		RX_DSP3		NPU_CPU0	NPU_CPU1	NPU_CPU2	NPU_CPU3	NPU_CPU4	NPU_CPU5	
+item $idx PMADDR 	0xC4720400	0xC472A400	0xC4740400	0xC474A400	0xC4700550	0xC470A550	0xD498A400	0xD491E400	0xD4900550	0xD490A550	0xD494C550	0xD4956550	0xE5700400	0xE5708400	0xE5710400	0xE5718400	0xE5740400	0xE5748400	
+if $PMADDR seq \$PMADDR return
+pm -4 $PMADDR 1
+set -i idx
+goto NODES_LOOP
+
+
+########################################################
+# Subroutine: ConfigGmac
+# ConfigGmac:
+pm -4 0xe5738014 0x8080
+pm -4 0xe5738010 0xadc3
+pm -4 0xe5738014 0x4e09
+pm -4 0xe5738010 0xa803
+pm -4 0xe5738014 0xc003
+pm -4 0xe5738010 0xa843
+pm -4 0xe5738010 0xb043
+return

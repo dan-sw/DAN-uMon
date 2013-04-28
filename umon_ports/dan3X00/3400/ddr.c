@@ -1,3 +1,4 @@
+/* Copyright 2013, Qualcomm Atheros, Inc. */
 /*
 All files except if stated otherwise in the begining of the file are under the GPLv2 license:
 -----------------------------------------------------------------------------------
@@ -195,7 +196,27 @@ int ddr_init_verify_short_mem_test(int ddr_module_id, uint32 offset)
 	uint32 j, b, r, c;
 	uint32 ddr_write_addr_val = 0x00000000, ddr_read_addr_val = 0x00000000; 
 	uint32 base_addr = ddr_base_access_addr[ddr_module_id];
+	uint32 fail_flag = 0;
 	
+#if defined(SAVE_RESTORE_DDR_CONTEXT)	
+	static UINT32 store_buf[DDRDRV_VERIF_TEST_SIZE*DDR_NUM_OF_BANK];
+	UINT32 ix=0;
+
+	/* Save DDR context to NPU, stack should be big enough */
+	for(b=0; b<DDR_NUM_OF_BANK; b=b+1) {				    									// DDR banks (DDR_NUM_OF_BANK)
+		for(j=0; j<DDRDRV_VERIF_TEST_SIZE; j=j+1) {												// DDR test size
+			
+				c = ( ((j*((0x1<<DDR_NUM_OF_COL_ADDR)/DDRDRV_VERIF_TEST_SIZE)+offset) % 0x3ff));			// 10bits (DDR_NUM_OF_COL_ADDR)
+				r = ( ((j*((0x1<<DDR_NUM_OF_ROW_ADDR)/DDRDRV_VERIF_TEST_SIZE)+offset) % 0x3fff));		// 14bits (DDR_NUM_OF_ROW_ADDR)						
+				ddr_write_addr_val = base_addr + ((r<<15) | (b<<12) | (c<<2));			
+			
+				store_buf[ix++] = RegRead32(ddr_write_addr_val);								// Read DDR
+		} 
+	}
+
+#endif /* SAVE_RESTORE_DDR_CONTEXT */	
+	
+
 	//WRITE DDR
 	//--------- 
 	for(b=0; b<DDR_NUM_OF_BANK; b=b+1) {	 			    									// DDR banks (DDR_NUM_OF_BANK)
@@ -223,12 +244,31 @@ int ddr_init_verify_short_mem_test(int ddr_module_id, uint32 offset)
 				ddr_read_addr_val = RegRead32(ddr_write_addr_val);								// Read DDR
 									
 				if(ddr_read_addr_val != ddr_write_addr_val) {
-					return (-1);
+					fail_flag = (-1);
+					break;
 				}	
 		} 
+		if (fail_flag)
+			break;
 	}
-  
-	return (0);
+
+#if defined(SAVE_RESTORE_DDR_CONTEXT)	
+	
+	// restore DDR context
+	//--------- 
+	ix = 0;
+	for(b=0; b<DDR_NUM_OF_BANK; b=b+1) {	 			    	// DDR banks (DDR_NUM_OF_BANK)
+		for(j=0; j<DDRDRV_VERIF_TEST_SIZE; j=j+1) {				// DDR test size	
+		
+				c = ( ((j*((0x1<<DDR_NUM_OF_COL_ADDR)/DDRDRV_VERIF_TEST_SIZE)+offset) % 0x3ff));			// 10bits (DDR_NUM_OF_COL_ADDR)
+				r = ( ((j*((0x1<<DDR_NUM_OF_ROW_ADDR)/DDRDRV_VERIF_TEST_SIZE)+offset) % 0x3fff));		// 14bits (DDR_NUM_OF_ROW_ADDR)						
+				ddr_write_addr_val = base_addr + ((r<<15) | (b<<12) | (c<<2));			
+			
+				RegWrite32(ddr_write_addr_val, store_buf[ix++]);	//Write DDR
+		}
+	}
+#endif /* SAVE_RESTORE_DDR_CONTEXT */
+	return (fail_flag);
 		
 }	//ddr_init_verify_short_mem_test	
 

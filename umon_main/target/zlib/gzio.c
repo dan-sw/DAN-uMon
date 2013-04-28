@@ -1,3 +1,4 @@
+/* Copyright 2013, Qualcomm Atheros, Inc. */
 /* gzio.c -- IO on .gz files
  * Copyright (C) 1995-1998 Jean-loup Gailly.
  * For conditions of distribution and use, see copyright notice in zlib.h
@@ -461,7 +462,7 @@ decompress(char *src,int srclen, char *dest)
 
 #define ALIGN4BYTE_UP(x)	((unsigned)(x + 3) & (~3))
 
-static void memcpy_4aligned(int *to, int *from, int bytecount)
+void memcpy_4aligned(int *to, int *from, int bytecount)
 {
 	int *end = to + (bytecount / sizeof(int));
 	while (to < end)

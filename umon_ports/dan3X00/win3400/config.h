@@ -1,3 +1,4 @@
+/* Copyright 2013, Qualcomm Atheros, Inc. */
 /*
 All files except if stated otherwise in the begining of the file are under the GPLv2 license:
 -----------------------------------------------------------------------------------
@@ -152,12 +153,13 @@ extern const char *CPU_name;
 /*****************************************************************************\
 								    ASSERTS
 \*****************************************************************************/
-#define ASSERT(cond)											\
-	if (!(cond))												\
-{																\
-	printf("ASSERT: File %s, Line %u\n", __FILE__, __LINE__);	\
-	while(1);													\
-}
+#define ASSERT(cond)													\
+	if (!(cond))														\
+	{																	\
+		printf("ASSERT failure in function '%s' [%s:%d]\n", __FUNCTION__, __FILE__, __LINE__);	\
+		while(1);														\
+	}
+
 
 
 /*****************************************************************************\
@@ -194,7 +196,7 @@ extern const char *CPU_name;
 /* MONSTACKSIZE:
  * The amount of space allocated to the monitor's stack. 
  * This is the size in bytes of MonStack[] array, defined in start.c
- * KS: we are not using this stack mechanizm, so defining the dummy.
+ * KS: we are not using this stack mechanism, so defining the dummy.
  */
 #define MONSTACKSIZE			4
 

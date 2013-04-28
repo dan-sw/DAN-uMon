@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<root>
+  <test_points>
+    <working_directory>@</working_directory>
+	<rx_fft><in><file_action>to_file</file_action></in></rx_fft>
+	<!--rx_remove_cp><in><file_action>to_file</file_action></in></rx_remove_cp-->
+	<!--ul_PUSCH_rx><dftout><file_action>to_file</file_action></dftout></ul_PUSCH_rx-->
+  </test_points>
+</root>

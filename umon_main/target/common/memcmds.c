@@ -1,3 +1,4 @@
+/* Copyright 2013, Qualcomm Atheros, Inc. */
 /* memcmds.c:
  *	This code allows the monitor to display, modify, search, copy, fill
  *	and test memory in a variety of different ways.
@@ -492,7 +493,7 @@ Dm(int argc,char *argv[])
 
 char *FmHelp[] = {
 	"Fill Memory",
-	"-[24cinp] {start} {finish|byte-cnt} {value|pattern}",
+	"-[24cinpv] {start} {finish|byte-cnt} {value|pattern}",
 #if INCLUDE_VERBOSEHELP
 	"Options:",
 	" -2   short access",
@@ -501,6 +502,7 @@ char *FmHelp[] = {
 	" -i   increment {value|pattern}",
 	" -n   no verification",
 	" -p   arg3 is a pattern",
+	" -v   verify only",
 #endif
 	0,
 };
@@ -513,16 +515,17 @@ Fm(int argc,char *argv[])
 	uchar	*cptr, cdata;
 	ushort	*wptr, wdata;
 	ulong	*lptr, ldata, error_at;
-	int	width, opt, arg2iscount, arg3ispattern, err, verify, increment;
+	int	width, opt, arg2iscount, arg3ispattern, err, verify, verifyonly, increment;
 
 	width = 1;
 	verify = 1;
+	verifyonly = 0;
 	increment = 0;
 	error_at = 0;
 	arg2iscount = 0;
 	arg3ispattern = 0;
 	pattern = pp = (char *)0;
-	while((opt=getopt(argc,argv,"24cinp")) != -1) {
+	while((opt=getopt(argc,argv,"24cinpv")) != -1) {
 		switch(opt) {
 		case '2':
 			width = 2;
@@ -538,6 +541,9 @@ Fm(int argc,char *argv[])
 			break;
 		case 'n':
 			verify = 0;
+			break;
+		case 'v':
+			verifyonly = 1;
 			break;
 		case 'p':
 			arg3ispattern = 1;
@@ -584,7 +590,8 @@ Fm(int argc,char *argv[])
 					pp = pattern;
 				cdata = (uchar)*pp++;
 			}
-			*cptr = cdata;
+			if (!verifyonly)
+				*cptr = cdata;
 			if (verify) {
 				if (*cptr != cdata) {
 					err = 1;
@@ -598,7 +605,8 @@ Fm(int argc,char *argv[])
 	case 2:
 		wdata = (ushort) ldata;
 		for(wptr=(ushort *)start;wptr<(ushort *)finish;wptr++) {
-			*wptr = wdata;
+			if (!verifyonly)
+				*wptr = wdata;
 			if (verify) {
 				if (*wptr != wdata) {
 					err = 1;
@@ -611,7 +619,8 @@ Fm(int argc,char *argv[])
 		break;
 	case 4:
 		for(lptr=(ulong *)start;lptr<(ulong *)finish;lptr++) {
-			*lptr = ldata;
+			if (!verifyonly)
+				*lptr = ldata;
 			if (verify) {
 				if (*lptr != ldata) {
 					err = 1;

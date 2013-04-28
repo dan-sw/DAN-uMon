@@ -1,3 +1,4 @@
+/* Copyright 2013, Qualcomm Atheros, Inc. */
 /*
 All files except if stated otherwise in the begining of the file are under the GPLv2 license:
 -----------------------------------------------------------------------------------
@@ -28,7 +29,10 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 	details regarding uMon1.0's flash device driver interface.
 \**********************************************************************/
 
+#define TRACE_ENABLED_PRINTF
+
 #include "config.h"
+#include "trc.h"
 
 #if INCLUDE_FLASH
 
@@ -70,23 +74,13 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #endif
 #define	FLASH_PAGE_SIZE			 256
 
-#define	FLASH_WEL_TIMEOUT		   1	// In seconds
-#define	FLASH_WRITE_TIMEOUT		   1	// In seconds
-#define	FLASH_ERASE_SEC_TIMEOUT	   10	// In seconds
-#define	FLASH_ERASE_ALL_TIMEOUT	   200	// In seconds
+#define	FLASH_WEL_TIMEOUT			  1	// In seconds
+#define	FLASH_WRITE_TIMEOUT			  1	// In seconds
+#define	FLASH_ERASE_SEC_TIMEOUT		 10	// In seconds
+#define	FLASH_ERASE_ALL_TIMEOUT		200	// In seconds
 
-
-/**********************************************************************\
-							Macros
-\**********************************************************************/
-
-//#define DEBUGFLASH
-#ifdef DEBUGFLASH
-#define dprint(body)  printf body
-#else
-#define dprint(body)
-#endif
-#define derror(body)  printf body
+#define FLASH_NUM_SECTORS			256
+#define FLASH_MAXADDR				(FLASH_NUM_SECTORS * FLASH3400_SECTORSIZE)
 
 
 /**********************************************************************\
@@ -117,6 +111,9 @@ static inline uint8 FLASH_ReadStatusReg(uint8 bank)
 	return res[3]; // last answered byte
 }
 
+
+#if 0
+// Unused for now
 static inline uint8 FLASH_WriteStatusReg(uint8 bank, uint8 status)
 {
 	uint8 cmd[2];
@@ -140,6 +137,8 @@ static inline uint8 FLASH_WriteStatusReg(uint8 bank, uint8 status)
 
 	return 0; // last answered byte
 }
+#endif
+
 
 static int FLASH_WaitStatusWel(uint8 bank)
 {
@@ -151,7 +150,7 @@ static int FLASH_WaitStatusWel(uint8 bank)
 	{
 		telapsed = CPU_GetCurrentClockCount() - tstart;
 		if (telapsed > timeout) {
-			derror (("FLASH_WaitStatusWel timeout!\n"));
+			TRCERR ("FLASH_WaitStatusWel timeout!\n");
 			return -1;
 		}
 
@@ -179,8 +178,8 @@ static int FLASH_WaitStatusWip(uint8 bank, uint32 tout)
 		{
 			tout_cnt++;
 			if (tout_cnt > FLASH_WRITE_TIMEOUT) {
-				derror (("FLASH_WaitStatusWip timeout!\n"));
-				//derror(("WIP timeout-1! tstart=%u,telapsed=%u,CPU_SystemClock=%u,tout=%u,tout_cnt=%u,status=0x%02x\n", tstart, telapsed, CPU_SystemClock, tout, tout_cnt, status));
+				TRCERR ("FLASH_WaitStatusWip timeout!\n");
+				//printf("WIP timeout-1! tstart=%u,telapsed=%u,CPU_SystemClock=%u,tout=%u,tout_cnt=%u,status=0x%02x\n", tstart, telapsed, CPU_SystemClock, tout, tout_cnt, status);
 				break;
 			}
 			tstart = CPU_GetCurrentClockCount();
@@ -201,8 +200,8 @@ static int FLASH_WaitStatusWip(uint8 bank, uint32 tout)
 			tout_cnt++;
 			if (tout_cnt > tout)
 			{
-				dprint(("WIP timeout!\n"));
-				//derror(("WIP timeout-2! tstart=%u,telapsed=%u,CPU_SystemClock=%u,tout=%u,tout_cnt=%u,status=0x%02x\n", tstart, telapsed, CPU_SystemClock, tout, tout_cnt, status));
+				TRCERR ("WIP timeout!\n");
+				//printf("WIP timeout-2! tstart=%u,telapsed=%u,CPU_SystemClock=%u,tout=%u,tout_cnt=%u,status=0x%02x\n", tstart, telapsed, CPU_SystemClock, tout, tout_cnt, status);
 				return -1;
 			}
 			tstart = CPU_GetCurrentClockCount();
@@ -217,10 +216,13 @@ static int FLASH_WaitStatusWip(uint8 bank, uint32 tout)
 
 void FLASH_Read(uint8 bank, uint8 *data, unsigned addr, unsigned len)
 {
+	TRCFUNS();
+
 	uint8	 cmd[4];
 	unsigned i;
 
-	dprint (("FLASH_Read: bank %x, data %x, addr %x, len %x\n", bank, data, addr, len));
+	TRCPRN ("FLASH_Read: bank %x, data %x, addr %x, len %x\n", bank, data, addr, len);
+	ASSERT (addr < FLASH_MAXADDR);
 
 	cmd[0] = FLASH_CMD_READ;
 	for (i = 0; i < len; i += FLASH_FIFO_SIZE)
@@ -232,8 +234,10 @@ void FLASH_Read(uint8 bank, uint8 *data, unsigned addr, unsigned len)
 		cmd[2] = ((uint8)(addr >> 8));
 		cmd[3] = ((uint8)(addr));
 
+		TRCSTR ("before 'cache touch'");
 		// Pre-fetch data to cache (touch) to avoid line fill on write
 		PLATFORM_cache_control((void *)data, page_size, CACHE_OP_TOUCH);
+		TRCSTR ("after 'cache touch'");
 
 		// Perform SPI transaction
 		SPI_process
@@ -249,10 +253,15 @@ void FLASH_Read(uint8 bank, uint8 *data, unsigned addr, unsigned len)
 			0							// in_skip_end
 		);
 
+		TRCTRC ("data 1st word = %X", *(uint32*)data);
+
 		data += page_size;
 		addr += page_size;
 	}
+
+	TRCFUNE();
 }
+
 
 static inline void FLASH_WriteEnable(uint8 bank)
 {
@@ -272,6 +281,7 @@ static inline void FLASH_WriteEnable(uint8 bank)
 	);
 }
 
+
 static inline void FLASH_WriteDisable(uint8 bank)
 {
     uint8  res, cmd = FLASH_CMD_WRDI;
@@ -290,11 +300,13 @@ static inline void FLASH_WriteDisable(uint8 bank)
 	);
 }
 
+
 int FLASH_EraseSector(uint8 bank, unsigned secnum)
 {
 	uint8 cmd[4];
 
-	dprint (("FLASH_EraseSector: bank %x, secnum %x\n", bank, secnum));
+	TRCPRN ("FLASH_EraseSector: bank %x, secnum %x\n", bank, secnum);
+	ASSERT (secnum < FLASH_NUM_SECTORS);
 
 	FLASH_WriteEnable(bank);
 	if (FLASH_WaitStatusWel(bank) < 0)
@@ -325,11 +337,12 @@ int FLASH_EraseSector(uint8 bank, unsigned secnum)
 	return 0;
 }
 
+
 static inline int FLASH_EraseAll(uint8 bank)
 {
 	uint8 cmd[1];
 
-	dprint (("FLASH_EraseAll: bank %u\n", bank));
+	TRCPRN ("FLASH_EraseAll: bank %u\n", bank);
 
 	FLASH_WriteEnable(bank);
 	if (FLASH_WaitStatusWel(bank) < 0)
@@ -358,8 +371,10 @@ static inline int FLASH_EraseAll(uint8 bank)
 	return 0;
 }
 
+
 static inline int FLASH_ProgramPage(uint8 bank, unsigned addr, uint8* data, unsigned len)
 {
+	TRCFUNS();
 	uint8	 cmd[4];
 
 	// ASSERT (len <= FLASH_FIFO_SIZE)
@@ -383,18 +398,23 @@ static inline int FLASH_ProgramPage(uint8 bank, unsigned addr, uint8* data, unsi
 		len					// in_skip_end
 	);
 
-	if (FLASH_WaitStatusWip(bank, FLASH_WRITE_TIMEOUT) < 0)
+	if (FLASH_WaitStatusWip(bank, FLASH_WRITE_TIMEOUT) < 0) 	{
+		TRCFUNE();
 		return -1;
+	}
 	
+	TRCFUNE();
 	return 0;
 }
 
 
 int FLASH_Write(uint8 bank, unsigned addr, uint8* data, unsigned len)
 {
+	TRCFUNS();
 	unsigned i;
 
-	dprint (("FLASH_Write: bank %x, addr %x, data %x, len %x\n", bank, addr, data, len));
+	TRCPRN ("FLASH_Write: bank %x, addr %x, data %x, len %x\n", bank, addr, data, len);
+	ASSERT (addr < FLASH_MAXADDR);
 
 	for (i = 0; i < len; )
 	{
@@ -402,8 +422,10 @@ int FLASH_Write(uint8 bank, unsigned addr, uint8* data, unsigned len)
 		if (page_size)
 		{
 			FLASH_WriteEnable(bank);
-			if (FLASH_WaitStatusWel(bank) < 0)
+			if (FLASH_WaitStatusWel(bank) < 0) {
+				TRCFUNE();
 				return -1;
+			}
 
 			if (page_size <= FLASH_FIFO_SIZE) 
             {
@@ -420,8 +442,10 @@ int FLASH_Write(uint8 bank, unsigned addr, uint8* data, unsigned len)
                     offset += FLASH_FIFO_SIZE;
 
                     FLASH_WriteEnable(bank);
-                    if (FLASH_WaitStatusWel(bank) < 0)
-                        return -1;
+                    if (FLASH_WaitStatusWel(bank) < 0) {
+						TRCFUNE();
+						return -1;
+					}
                 }
                 while (len_rest > FLASH_FIFO_SIZE);
 				FLASH_ProgramPage(bank, addr + offset, data + offset, len_rest);
@@ -434,11 +458,13 @@ int FLASH_Write(uint8 bank, unsigned addr, uint8* data, unsigned len)
 		}
 	}
 
+	TRCFUNE();
 	return 0 /*Ok*/;
 }
 
 
 #if 0
+// Unused now
 void FLASH_Read_ID(uint8 bank, uint32 *jedec, uint16 *ext_jedec)
 {
 	uint8	 cmd;
@@ -503,7 +529,7 @@ struct flashdesc FlashNamId[] = {
  */
 int Flash3400_erase(struct flashinfo *fdev, int snum)
 {
-	dprint (("Flash3400_erase: fdev = %x, snum = %x\n", fdev, snum));
+	TRCPRN ("Flash3400_erase: fdev = %x, snum = %x\n", fdev, snum);
 	flash3400R_CheckRangeSector(snum);
 	memset((void*)flash3400R_GetSectorBase(snum), 0xFF, FLASH3400_SECTORSIZE);
 	return FLASH_EraseSector((uint8)(fdev->id), FLASH3400_START_SECTOR + snum);
@@ -517,8 +543,7 @@ static inline unsigned Flash3400_mem2flash_addr(unsigned mem_addr)
 
 static inline unsigned Flash3400_flash2mem_addr(unsigned flash_addr)
 {
-	unsigned flash_offset = flash_addr + 
-				FLASH3400_START_SECTOR * FLASH3400_SECTORSIZE;
+	unsigned flash_offset = flash_addr +  FLASH3400_START_SECTOR * FLASH3400_SECTORSIZE;
 	return (FLASH3400_RAM_BASE + flash_offset);
 }
 
@@ -530,17 +555,13 @@ int Flash3400_write(struct flashinfo *fdev, uchar *dest, uchar *src, long bytecn
     int rc;
 	flash3400R_CheckRangeAddr(dest);
 	memcpy((void*)dest, (void*)src, bytecnt);
-    rc = FLASH_Write((uint8)(fdev->id), 
-					Flash3400_mem2flash_addr((unsigned)dest),
-					dest, (unsigned)bytecnt);
+    rc = FLASH_Write((uint8)(fdev->id),  Flash3400_mem2flash_addr((unsigned)dest), dest, (unsigned)bytecnt);
+
 #ifdef CHECK_WRITTEN_TO_FLASH
-    if (rc == 0)
-    {
+    if (rc == 0) {
         printf("Checking the written info by read ... ");
         memset((void *)dest, 0, (unsigned)bytecnt);
-        FLASH_Read((uint8)(fdev->id), dest, 
-					Flash3400_mem2flash_addr((unsigned)dest),
-					(unsigned)bytecnt);
+        FLASH_Read((uint8)(fdev->id), dest,  Flash3400_mem2flash_addr((unsigned)dest), (unsigned)bytecnt);
         rc = memcmp((void *)dest, (void *)src, (unsigned)bytecnt);
         printf("%s\n", rc ? "Fail" : "Ok");
     }
@@ -712,12 +733,30 @@ int FlashInit(void)
 	return 0;
 }
 
+
 void spifQinit(void)
 {
 }
 
+
+#if 0
+// Unused
 int spifInit(void)
 {
+	return (0);
+}
+
+int spifWriteDisable(void)
+{
+	FLASH_WriteDisable(SPIF_device);
+	return (0);
+}
+#endif
+
+
+int spifWriteEnable(void)
+{
+	FLASH_WriteEnable(SPIF_device);
 	return (0);
 }
 
@@ -728,19 +767,7 @@ int spifWaitForReady(void)
 
 int spifId(int verbose)
 {
-	return (SPIF_device);
-}
-
-int spifWriteEnable(void)
-{
-	FLASH_WriteEnable(SPIF_device);
-	return (0);
-}
-
-int spifWriteDisable(void)
-{
-	FLASH_WriteDisable(SPIF_device);
-	return (0);
+	return SPIF_device;
 }
 
 int spifChipErase(void)
@@ -750,33 +777,39 @@ int spifChipErase(void)
 
 int spifGlobalUnprotect(void)
 {
+	// We don't use Flash protection
+#if 0
 	FLASH_WriteEnable(SPIF_device);
 	if (FLASH_WaitStatusWel(SPIF_device) < 0)
 		return -1;
 	FLASH_WriteStatusReg(SPIF_device, 0);
 	return (FLASH_WaitStatusWip(SPIF_device, FLASH_WRITE_TIMEOUT));
+#endif
+	return 0;
 }
 
 int spifGlobalProtect(void)
 {
+	// We don't use Flash protection
+#if 0
 	FLASH_WriteEnable(SPIF_device);
 	if (FLASH_WaitStatusWel(SPIF_device) < 0)
 		return -1;
 	FLASH_WriteStatusReg(SPIF_device, FLASH_STATUS_PROT);
 	return (FLASH_WaitStatusWip(SPIF_device, FLASH_WRITE_TIMEOUT));
+#endif
+	return 0;
 }
 
-int spifReadBlock(unsigned long addr,char *data,int len)
+int spifReadBlock(unsigned long addr, char *data, int len)
 {
-	FLASH_Read((uint8)(SPIF_device), (uint8 *)data,
-					addr, (unsigned)len);
+	FLASH_Read (SPIF_device, (uint8*)data, addr, len);
 	return (0);
 }
 
 int spifWriteBlock(unsigned long addr, char *data, int len)
 {
-	int rc = FLASH_Write((uint8)(SPIF_device),
-					addr, (uint8 *)data, (unsigned)len);
+	int rc = FLASH_Write (SPIF_device, addr, (uint8*)data, len);
 	return (rc);
 }
 
@@ -788,9 +821,8 @@ int spifBlockErase(int bsize, long addr)
 	{
 		rc = FLASH_EraseSector((uint8)(SPIF_device), sector++);
 		bsize -= FLASH3400_SECTORSIZE;
-		
 	}
-	return (rc);
+	return rc;
 }
 
 unsigned short spifReadStatus(int verbose)

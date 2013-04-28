@@ -1,3 +1,4 @@
+// Copyright 2013, Qualcomm Atheros, Inc.
 /*
 All files except if stated otherwise in the begining of the file are under the GPLv2 license:
 -----------------------------------------------------------------------------------
@@ -40,6 +41,8 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "tfsprivate.h"
 #include "flash.h"
 #include "flash3400.h"
+#include "trc.h"
+
 
 // We will define the function prototype type needed by monConnect()
 typedef int	(*MONCOMPTR)(int,void *, void *, void *);
@@ -75,6 +78,7 @@ void userinit(void)
 int main(int argc,char *argv[])
 {
 	CPU_Init();
+	TRCINIT();
 	SPI_init();
 	start(INITIALIZE);
 	return 0;

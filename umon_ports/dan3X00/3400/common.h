@@ -1,3 +1,4 @@
+/* Copyright 2013, Qualcomm Atheros, Inc. */
 /*
 All files except if stated otherwise in the begining of the file are under the GPLv2 license:
 -----------------------------------------------------------------------------------
@@ -15,6 +16,9 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 -----------------------------------------------------------------------------------
 */
 #define INPUT_CLOCK_HZ	40000000
+
+int getenv_int		(char * name);
+int getenv_int_def	(char * name, int defvalue);
 
 extern uint8 SPIF_device;
 extern int SOC_init(void);
